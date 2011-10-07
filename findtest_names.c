@@ -38,5 +38,6 @@ char * getUnitTestListAsString(ut_configuration_t *configp,test_results_t *tests
 		i++;
 
 	}
+	pclose(fd);
 	return "";
 }

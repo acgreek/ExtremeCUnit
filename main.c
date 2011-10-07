@@ -29,5 +29,6 @@ int main (int argc, char * argv[]) {
 	if (-1 != config.output_fd) printf("final results: %s\n",0 == result ? "SUCCESS": "FAILED"); 
 
 	dlclose(config.dynlibraryp);
+	config.dynlibraryp=NULL;
 	return result;
 }
