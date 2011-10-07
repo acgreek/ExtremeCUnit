@@ -1,7 +1,7 @@
 #include "unittest.h"
-int test_1 () {
+TEST(test_1) {
 	return 0;
 }
-int test_2 () {
+TEST(test_2) {
 	return 1;
 }
