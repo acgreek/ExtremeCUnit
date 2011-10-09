@@ -6,10 +6,11 @@
 #undef UNIT_TEST
 
 int ut_assertStatement(int result, char *statement, char * filename, int line) {
+
 	if (!result) {
 		fprintf(stderr, "%s:%d:0 statement failed: %s\n", filename, line, statement);
 	}
-	return result;
+	return 1== result? 0: 1;
 }
 
 char * getUnitTestListAsString(ut_configuration_t *configp,test_results_t *testsp);
