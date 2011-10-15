@@ -19,9 +19,8 @@ $(OBJDIR)/%.o : %.c
 	$(MAKEDEPEND); \
 	sed -e 's/\(^[^:\.o \t]\)/$(OBJDIR)\/\1/' < $*.d > $(DEPDIR)/$*.P; \
 	sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' -e '/^$$/ d' -e 's/$$/ :/' -e  's/\(^[^:.o \t]*\.o: .*\)/$(OBJDIR)\/\1/' < $*.d >> $(DEPDIR)/$*.P; \
-	$(COMPILE.c) -o $@ $<
-
-	#rm -f $*.d; \ 
+	$(COMPILE.c) -o $@ $< ;\
+	rm -f $*.d;  
 
 libunittest.so:	$(OBJS)
 	$(CC) $(CFLAGS) -o libunittest.so -shared  $(OBJS) 
