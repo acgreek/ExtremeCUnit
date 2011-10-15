@@ -7,6 +7,7 @@ typedef struct _ut_configuration_t {
 	FILE *output_fd;
 	void  *dynlibraryp;
 	int verbose;
+	char * gdb_test;
 } ut_configuration_t;
 #define UT_CONFIGURATION_DEFAULT {argv[0], stdout,NULL,1}
 #endif
