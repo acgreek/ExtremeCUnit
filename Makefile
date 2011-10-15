@@ -1,17 +1,20 @@
 CFLAGS=-Wall -ggdb -fPIC -fprofile-arcs -ftest-coverage -lgcov
 
+DEPDIR = .dep
+OBJDIR = obj
 CC=gcc
 SRC=main.c runner.c findtest_names.c assert_support.c
-OBJS=$(SRC:.c=.o)
 MAKEDEPEND = gcc -M $(CFLAGS) -o $*.d $<
+OBJS=$(SRC:.c=.o)
 
--include $(SRC:.c=.P)
+-include $(patsubstr %, $(DEPDIR)/%, $(SRC:.c=.P))
 
 %.o : %.c
 	@$(MAKEDEPEND); \
-	cp $*.d $*.P; \
+	mkdir -p $(DEPDIR)
+	cp $*.d $(DEPDIR)/$*.P; \
 	sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
-	-e '/^$$/ d' -e 's/$$/ :/' < $*.d >> $*.P; \
+	-e '/^$$/ d' -e 's/$$/ :/' < $*.d >> $(DEPDIR)/$*.P; \
 	rm -f $*.d
 	$(COMPILE.c) -o $@ $<
 
@@ -24,8 +27,8 @@ test: unittest_tests.c libunittest.so
 
 
 clean_profiling:
-	find . -name '*.gcda' | xargs rm 
-	find . -name '*.gcno' | xargs rm
+	find . -name '*.gcda' | xargs -r rm 
+	find . -name '*.gcno' | xargs -r rm
 
 run: test clean_profiling
 	./test
