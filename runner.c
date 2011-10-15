@@ -53,12 +53,15 @@ int run_test_forked(ut_configuration_t * configp, test_results_t *testp){
 	return 0;
 }
 int run_test_forked_in_gdb(ut_configuration_t * configp, test_results_t *testp){
+	int status;
 	char buffer[100] = "unittest_XXXXXX";
 	char * tempfile = create_tempfile(buffer, testp->test_name);
 	pid_t child_pid = run_test_forked_h1(configp, testp,1);
 	char bufferp[2000];
 	sprintf(bufferp, "gdb -x %s -q -p %u",tempfile,  child_pid);
 	system (bufferp);
+	waitpid(child_pid, &status,0);
+	return status;
 }
 
 int run_test(ut_configuration_t * configp, test_results_t *testp) {

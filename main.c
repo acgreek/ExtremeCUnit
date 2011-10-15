@@ -13,7 +13,7 @@ int run_tests(ut_configuration_t * configp, test_results_t *testsp);
 
 static void readCmdConfig(int argc, char * argv[], ut_configuration_t *configp) {
 	int option;
-	while (-1 != (option =getopt(argc,argv, ":g"))) {
+	while (-1 != (option =getopt(argc,argv, "g:"))) {
 		switch (option) {
 			case 'g':
 				configp->gdb_test = optarg;		

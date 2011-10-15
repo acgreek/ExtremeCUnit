@@ -24,8 +24,8 @@ test: unittest_tests.c libunittest.so
 
 
 clean_profiling:
-#       find . -name '*.gcda' | xargs rm 
-#	find . -name '*.gcno' | xargs rm
+	find . -name '*.gcda' | xargs rm 
+	find . -name '*.gcno' | xargs rm
 
 run: test clean_profiling
 	./test
