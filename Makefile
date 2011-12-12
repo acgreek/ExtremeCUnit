@@ -1,5 +1,4 @@
-CFLAGS=-Wall -ggdb -fPIC -fprofile-arcs -ftest-coverage -lgcov
-
+CFLAGS=-Wall -ggdb -fPIC -fprofile-arcs -ftest-coverage 
 DEPDIR = .dep
 OBJDIR = obj
 CC=gcc
@@ -12,6 +11,7 @@ INC_FILE_NAMES=$(SRC:.c=.P)
 INCLUDES=$(patsubst %,$(DEPDIR)/%,$(INC_FILE_NAMES))
 
 -include $(INCLUDES)
+all: run
 
 $(OBJDIR)/%.o : %.c
 	mkdir -p $(OBJDIR); \
@@ -26,15 +26,23 @@ libunittest.so:	$(OBJS)
 	$(CC) $(CFLAGS) -o libunittest.so -shared  $(OBJS) 
 
 test: unittest_tests.c libunittest.so
-	$(CC) -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,. -DUNIT_TEST -o $@ unittest_tests.c libunittest.so  -ldl
+	$(CC) -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,. -DUNIT_TEST -o $@ unittest_tests.c libunittest.so  -ldl 
 
-.PHONY: clean clean_profiling run
+.PHONY: clean clean_profiling run coverage
 
 clean_profiling:
 	find . -name '*.gcda' | xargs -r rm 
-	find . -name '*.gcno' | xargs -r rm
+#	find . -name '*.gcno' | xargs -r rm
 
 run: test clean_profiling
 	./test
+
+
+coverage:test clean_profiling
+	lcov --directory obj --zerocounters
+	./test
+	lcov --directory obj --capture --output-file obj/app.info
+	genhtml obj/app.info -o html
+
 clean:  clean_profiling
 	rm $(OBJS) test libunittest.so  -rf

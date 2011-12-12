@@ -46,6 +46,7 @@ typedef struct _test_suite_t {
 
 int ut_assertStatement(int result, char *statement, char * filename, int line);
 #define Assert(STATEM) if (ut_assertStatement(STATEM, #STATEM, __FILE__, __LINE__)){return -1;}
+#define AssertEqInt(STATEM, expect) if (ut_assertStatementEqInt(STATEM,expect, #STATEM, __FILE__, __LINE__)){return -1;}
 
 #endif 
 #endif
