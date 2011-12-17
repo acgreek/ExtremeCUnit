@@ -14,7 +14,7 @@
 #include "unittest.h"
 #undef UNIT_TEST
 
-char * create_tempfile(char * filename, char * test_name){
+char * create_tempfile(char * filename,const  char * test_name){
 	FILE * fid = fopen (filename, "w");
 	if (NULL == fid){
 		perror("opening file:");
@@ -30,7 +30,7 @@ char * create_tempfile(char * filename, char * test_name){
 
 
 int run_test_in_child(ut_configuration_t * configp, test_results_t *testp){
-	int results = 0 == testp->func(NULL) ? 0 : 1;
+	int results = 0 == testp->func() ? 0 : 1;
 	return results;
 }
 int run_test_forked_h1(ut_configuration_t * configp, test_results_t *testp, int seconds_to_sleep){

@@ -7,6 +7,8 @@ MAKEDEPEND = gcc -M $(CFLAGS) -o $*.d $<
 OBJ_FILE_NAMES=$(SRC:.c=.o)
 OBJS=$(patsubst %,$(OBJDIR)/%,$(OBJ_FILE_NAMES))
 
+UNIT_TEST_SRC= unittest_tests.c unittest_cpp_tests.cc
+
 INC_FILE_NAMES=$(SRC:.c=.P)
 INCLUDES=$(patsubst %,$(DEPDIR)/%,$(INC_FILE_NAMES))
 
@@ -25,8 +27,13 @@ $(OBJDIR)/%.o : %.c
 libunittest.so:	$(OBJS)
 	$(CC) $(CFLAGS) -o libunittest.so -shared  $(OBJS) 
 
-test: unittest_tests.c libunittest.so
-	$(CC) -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,. -DUNIT_TEST -o $@ unittest_tests.c libunittest.so  -ldl 
+install: libunittest.so
+	mkdir -p ~/lib
+	mkdir -p ~/include	
+	cp libunittest.so ~/lib
+
+test: $(UNIT_TEST_SRC) libunittest.so
+	$(CC) -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,. -DUNIT_TEST -o $@ $(UNIT_TEST_SRC) libunittest.so  -ldl  -lstdc++
 
 .PHONY: clean clean_profiling run coverage
 
@@ -36,7 +43,6 @@ clean_profiling:
 
 run: test clean_profiling
 	./test
-
 
 coverage:test clean_profiling
 	lcov --directory obj --zerocounters
