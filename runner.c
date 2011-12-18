@@ -73,12 +73,15 @@ int run_test(ut_configuration_t * configp, test_results_t *testp) {
 
 		return cur_results;
 	}
-	else 
-		cur_results = 0 == run_test_forked(configp,testp) ? 0 :1; 
+	cur_results = 0 == run_test_forked(configp,testp) ? 0 :1; 
 	if (configp->verbose) {
 		fprintf(configp->output_fd, "%s : %s\n", testp->test_name, 0==cur_results?"SUCCESS": "FAILED");
 		fflush(configp->output_fd);
 	}
+	if (0 != cur_results && configp->rerun_in_debugger) {
+		cur_results = 0 == run_test_forked_in_gdb(configp,testp) ? 0 :1; 
+	}
+
 	return cur_results;
 }
 

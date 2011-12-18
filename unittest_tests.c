@@ -5,7 +5,7 @@ TEST(test_1) {
 	return 0;
 }
 TEST(test_2) {
-	//Assert(1==0);
+	Assert(1==0);
 	return 0;
 }
 void chomp(char * str);
