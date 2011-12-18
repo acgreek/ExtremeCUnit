@@ -7,7 +7,7 @@
 #define UNIT_TEST
 #include "unittest.h"
 #undef UNIT_TEST
-#define COMMAND "nm %s |grep UnitTest_a_test_to_run_|cut -d' ' -f 3"
+#define COMMAND "nm %s |grep UnitTest_a_test_to_run_|cut -d' ' -f 3|grep -E \"^UnitTest_a_test_to_run_\""
 void chomp(char *str) {
 	while ('\0' != *str ) {
 		if (*str == '\n')
