@@ -17,7 +17,12 @@ TEST(chomp_test_remove) {
 	return 0;
 }
 TEST(int_test) {
-//	char foo[200] = "a";
-	//AssertEqInt(strcmp(foo,"a"), 0);
+	AssertEqInt(10 , 0xa);
+	return 0;
+}
+TEST(string_test) {
+	AssertEqStr("bla" "bla", "blabla");
+	AssertEqStr(NULL, NULL);
+	AssertEqStr("bla", NULL);
 	return 0;
 }

@@ -48,11 +48,14 @@ typedef struct _test_suite_t {
 extern "C"  {
 #endif
 int ut_assertStatement(int result,const char *statement,const char * filename, int line);
+int ut_assertStatementEqInt(int real, int exected,const char *statement,const char * filename, int line);
+int ut_assertStatementEqStr(const char * real,const char * expected ,const char *statement,const char * filename, int line);
 #ifdef __cplusplus
 }
 #endif
 #define Assert(STATEM) if (ut_assertStatement(STATEM, #STATEM, __FILE__, __LINE__)){return -1;}
 #define AssertEqInt(STATEM, expect) if (ut_assertStatementEqInt(STATEM,expect, #STATEM, __FILE__, __LINE__)){return -1;}
+#define AssertEqStr(STATEM, expect) if (ut_assertStatementEqStr(STATEM,expect, #STATEM, __FILE__, __LINE__)){return -1;}
 
 #endif 
 #endif
