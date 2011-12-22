@@ -5,7 +5,7 @@
 #include <string.h>
 #include <dlfcn.h>
 #define UNIT_TEST
-#include "unittest.h"
+#include "suite_and_test_list_wrapper.h"
 #undef UNIT_TEST
 #define COMMAND "nm %s |grep UnitTest_a_test_to_run_|cut -d' ' -f 3|grep -E \"^UnitTest_a_test_to_run_\""
 void chomp(char *str) {
@@ -16,15 +16,16 @@ void chomp(char *str) {
 	}
 }
 
-void loadTestStruct(int i, test_results_t *testsp, char *line,ut_configuration_t *configp) {
+void loadTestStruct(int i,ListNode_t *test_suites_list_headp, char *line,ut_configuration_t *configp) {
 	chomp(line);
 	test_results_t *trp;
 	trp = dlsym(configp->dynlibraryp, line);
-	memcpy(&testsp[i], trp, sizeof(test_results_t));
-	memset(&testsp[i+1], '\0', sizeof(test_results_t));
-
+	test_element_t * e = create_test_element();
+	memcpy(&e->test, trp, sizeof(test_results_t));
+	test_suite_element_t *sp = NODE_TO_ENTRY(test_suite_element_t,link,test_suites_list_headp->nextp);
+	ListAddEnd(&sp->test_list_head, &e->link);
 }
-char * getUnitTestListAsString(ut_configuration_t *configp,test_results_t *testsp) {
+char * getUnitTestListAsString(ut_configuration_t *configp,ListNode_t *test_suites_list_headp) {
 	char command_line[1024];
 
 	snprintf(command_line, 1023, COMMAND, configp->program_name);
@@ -33,7 +34,7 @@ char * getUnitTestListAsString(ut_configuration_t *configp,test_results_t *tests
 	while (!feof(fd)) {
 		char line[300];
 		if (0 != fgets(line,299, fd)) {
-			loadTestStruct(i, testsp, line,configp);
+			loadTestStruct(i, test_suites_list_headp, line,configp);
 		}
 		i++;
 

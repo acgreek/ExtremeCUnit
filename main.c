@@ -3,13 +3,13 @@
 #include <unistd.h>
 #include "ut_config.h"
 #define UNIT_TEST
-#include "unittest.h"
+#include "suite_and_test_list_wrapper.h"
 #undef UNIT_TEST
 
 
-char * getUnitTestListAsString(ut_configuration_t *configp,test_results_t *testsp);
+char * getUnitTestListAsString(ut_configuration_t *configp,ListNode_t *test_suites_list_headp);
 
-int run_tests(ut_configuration_t * configp, test_results_t *testsp);
+int run_tests(ut_configuration_t * configp, ListNode_t *test_suites_list_headp);
 
 
 void usage(int argc, char * argv[]) {
@@ -43,10 +43,40 @@ static void readCmdConfig(int argc, char * argv[], ut_configuration_t *configp) 
 	}
 
 }
+
+test_suite_element_t * create_test_suite_element() {
+	test_suite_element_t * e = malloc(sizeof(test_suite_element_t));
+	e->suitep=NULL;	
+	ListInitialize(&e->test_list_head);
+	return e;
+}
+test_element_t * create_test_element() {
+	test_element_t * e = malloc(sizeof(test_element_t));
+	return e;
+}
+static test_suite_t g_default_test_suite = {
+	"",
+	"default",
+	"",
+	0,
+	NULL,
+	NULL
+};
+static void addDefaultSuite(ListNode_t *test_suites_list_head) {
+	test_suite_element_t * e = create_test_suite_element();
+	ListAddEnd(test_suites_list_head, &e->link);
+	e->suitep = &g_default_test_suite;
+
+}
+
+
 int main (int argc, char * argv[]) {
 	ut_configuration_t config = UT_CONFIGURATION_DEFAULT;
 	int result = 0;
-	test_results_t tests[50] ;
+
+	ListNode_t test_suites_list_head;
+	ListInitialize(&test_suites_list_head);
+	addDefaultSuite(&test_suites_list_head);
 
 	readCmdConfig(argc, argv, &config);
 
@@ -55,9 +85,9 @@ int main (int argc, char * argv[]) {
 		printf("%s\n", dlerror());
 		return(-1);
 	}
-	getUnitTestListAsString(&config, tests);
+	getUnitTestListAsString(&config, &test_suites_list_head);
 
-	result = run_tests(&config, tests);
+	result = run_tests(&config, &test_suites_list_head);
 	if (config.verbose) printf("final results: %s\n",0 == result ? "SUCCESS": "FAILED"); 
 	dlclose(config.dynlibraryp);
 	config.dynlibraryp=NULL;

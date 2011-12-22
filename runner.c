@@ -11,7 +11,7 @@
 #include <signal.h>
 
 #define UNIT_TEST
-#include "unittest.h"
+#include "suite_and_test_list_wrapper.h"
 #undef UNIT_TEST
 
 char * create_tempfile(char * filename,const  char * test_name){
@@ -106,14 +106,27 @@ int run_test(ut_configuration_t * configp, test_results_t *testp) {
 
 	return cur_results;
 }
+typedef struct _execute_context_t{
+	ut_configuration_t * configp;
+	int result;
+}execute_context_t;
 
 
-int run_tests(ut_configuration_t * configp, test_results_t *testsp) {
-	int result=0;
-	int i=0;
-	while (NULL != testsp[i].test_name) { 
-		result += run_test(configp, &testsp[i]) ;
-		i++;
-	}
-	return result;
+void executeTest(ListNode_t * nodep, void * datap) {
+	execute_context_t * ecp = (execute_context_t *) datap;
+	test_element_t *sp = NODE_TO_ENTRY(test_element_t,link,nodep);
+	ecp->result += run_test(ecp->configp, &sp->test) ;
+}
+void executeSuite(ListNode_t * nodep, void * datap) {
+	test_suite_element_t *sp = NODE_TO_ENTRY(test_suite_element_t,link,nodep);
+	execute_context_t * ecp = (execute_context_t *) datap;
+	ListApplyAll (&sp->test_list_head, executeTest,ecp);
+
+}
+int run_tests(ut_configuration_t * configp,  ListNode_t *test_suites_list_headp) {
+	execute_context_t ec;
+	ec.configp = configp;
+	ec.result = 0;
+	ListApplyAll (test_suites_list_headp, executeSuite, &ec);
+	return ec.result;
 }
