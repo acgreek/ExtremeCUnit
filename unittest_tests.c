@@ -20,9 +20,13 @@ TEST(int_test) {
 	AssertEqInt(10 , 0xa);
 	return 0;
 }
+#include <stdlib.h>
 TEST(string_test) {
 	AssertEqStr("bla" "bla", "blabla");
 	AssertEqStr(NULL, NULL);
-	AssertEqStr("bla", NULL);
+	char *c = (char *) malloc(10);
+	c[0] = 'a';
+	c[1] = '\0';
+	AssertEqStr(c,"a");
 	return 0;
 }

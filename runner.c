@@ -28,9 +28,17 @@ char * create_tempfile(char * filename,const  char * test_name){
 
 
 
+#include <malloc.h>
 
 int run_test_in_child(ut_configuration_t * configp, test_results_t *testp){
+	struct mallinfo start_mem, end_mem;
+	start_mem= mallinfo();
 	int results = 0 == testp->func() ? 0 : 1;
+	end_mem = mallinfo();
+	if (start_mem.uordblks != end_mem.uordblks) {
+		fprintf(stderr, "%s:%d:0 possible memory leak in test %s\n",testp->filename, testp->line,testp->test_name );
+		return -1;
+	}
 	return results;
 }
 int run_test_forked_h1(ut_configuration_t * configp, test_results_t *testp, int seconds_to_sleep){
