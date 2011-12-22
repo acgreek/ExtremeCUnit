@@ -30,13 +30,27 @@ char * create_tempfile(char * filename,const  char * test_name){
 
 #include <malloc.h>
 
-int run_test_in_child(ut_configuration_t * configp, test_results_t *testp){
+static test_results_t * g_running_test = NULL; 
+void segv_handler(int sig) {
+	sig=sig;
+	fprintf(stderr, "%s:%d:0 segv in  test %s\n",g_running_test->filename, g_running_test->line,g_running_test->test_name);
+	exit(-1);
+
+}
+int run_test_in_child_stack_monitor(ut_configuration_t * configp, test_results_t *testp){
+	g_running_test= testp;
+	signal(SIGSEGV, segv_handler);
+	int results = 0 == testp->func() ? 0 : 1;
+	return results;
+}
+int run_test_in_child_memcheck_and_stack_monitor(ut_configuration_t * configp, test_results_t *testp){
 	struct mallinfo start_mem, end_mem;
 	start_mem= mallinfo();
-	int results = 0 == testp->func() ? 0 : 1;
+
+	int results =  run_test_in_child_stack_monitor(configp, testp);
 	end_mem = mallinfo();
 	if (start_mem.uordblks != end_mem.uordblks) {
-		fprintf(stderr, "%s:%d:0 possible memory leak in test %s\n",testp->filename, testp->line,testp->test_name );
+		fprintf(stderr, "%s:%d:0 possible memory leak in test %s\n",testp->filename, testp->line,testp->test_name);
 		return -1;
 	}
 	return results;
@@ -46,7 +60,7 @@ int run_test_forked_h1(ut_configuration_t * configp, test_results_t *testp, int 
 	if (0 == (child_pid = fork()) ) {
 		int results;
 		sleep(seconds_to_sleep);
-		results =  run_test_in_child(configp, testp);
+		results =  run_test_in_child_memcheck_and_stack_monitor(configp, testp);
 		exit(results);
 	}
 	return child_pid;
