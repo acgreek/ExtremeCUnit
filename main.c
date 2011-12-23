@@ -62,6 +62,17 @@ static void addDefaultSuite(ListNode_t *test_suites_list_head) {
 	ListAddEnd(test_suites_list_head, &e->link);
 }
 
+static void freeTest(ListNode_t * nodep, UNUSED void * datap) {
+	ListRemove(nodep);			
+	test_element_t * e = NODE_TO_ENTRY(test_element_t, link, nodep);
+	free(e);
+}
+static void freeSuite(ListNode_t * nodep, UNUSED void * datap) {
+	ListRemove(nodep);			
+	test_suite_element_t * e = NODE_TO_ENTRY(test_suite_element_t, link, nodep);
+	ListApplyAll(&e->test_list_head,freeTest,  NULL);
+	free(e);
+}
 
 int main (int argc, char * argv[]) {
 	ut_configuration_t config = UT_CONFIGURATION_DEFAULT;
@@ -82,6 +93,8 @@ int main (int argc, char * argv[]) {
 
 	result = run_tests(&config, &test_suites_list_head);
 	if (config.verbose) printf("final results: %s\n",0 == result ? "SUCCESS": "FAILED"); 
+	ListApplyAll(&test_suites_list_head,freeSuite,  NULL);
+	
 	dlclose(config.dynlibraryp);
 	config.dynlibraryp=NULL;
 

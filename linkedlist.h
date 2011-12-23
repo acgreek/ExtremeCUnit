@@ -126,7 +126,7 @@ typedef int ListIsMatchFunc_t(ListNode_t * nodep, void * datap);
  * @param func   function to apply to every node
  * @param datap  pointer passed in as the second arg to function being applied
  * 
- * @Note you should be able to safely remve the current node from with the func
+ * @Note you should be able to safely remove the current node from within the func
  */
 static void ListApplyAll(ListNode_t * listp, ListApplyFunc_t func, void *datap) {
 	ListNode_t *cur_nodep =listp->nextp;
