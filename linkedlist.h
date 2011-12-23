@@ -147,7 +147,7 @@ static void ListApplyAll(ListNode_t * listp, ListApplyFunc_t func, void *datap) 
  * @param datap  pointer passed in as the second arg to find function 
  * @return       pointer to first node that matches or NULL if non-match
  */
-static ListNode_t * ListFind(ListNode_t * listp, ListIsMatchFunc_t func, void *datap) {
+UNUSED static ListNode_t * ListFind(ListNode_t * listp, ListIsMatchFunc_t func, void *datap) {
 	ListNode_t *cur_nodep =listp->nextp;
 	while (listp != cur_nodep) {
 		ListNode_t * nextp =cur_nodep->nextp ;

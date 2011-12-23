@@ -44,29 +44,22 @@ static void readCmdConfig(int argc, char * argv[], ut_configuration_t *configp) 
 
 }
 
-test_suite_element_t * create_test_suite_element() {
+#include <string.h>
+test_suite_element_t * create_test_suite_element(char * suite_name) {
 	test_suite_element_t * e = malloc(sizeof(test_suite_element_t));
-	e->suitep=NULL;	
+	memset(e, '\0', sizeof(test_suite_element_t));
+	e->suite.suite_name = suite_name;
 	ListInitialize(&e->test_list_head);
 	return e;
 }
-test_element_t * create_test_element() {
+test_element_t * create_test_element(test_results_t * testp) {
 	test_element_t * e = malloc(sizeof(test_element_t));
+	memcpy(&e->test, testp, sizeof(test_results_t));
 	return e;
 }
-static test_suite_t g_default_test_suite = {
-	"",
-	"default",
-	"",
-	0,
-	NULL,
-	NULL
-};
 static void addDefaultSuite(ListNode_t *test_suites_list_head) {
-	test_suite_element_t * e = create_test_suite_element();
+	test_suite_element_t * e = create_test_suite_element(UNITTEST_GLOBAL_SUITE); 
 	ListAddEnd(test_suites_list_head, &e->link);
-	e->suitep = &g_default_test_suite;
-
 }
 
 

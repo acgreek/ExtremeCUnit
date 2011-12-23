@@ -35,3 +35,32 @@ TEST(string_test) {
 	*/
 	return 0;
 }
+char *g_foop = 0;
+
+SUITE_SETUP(suite1) {
+	g_foop = strdup("blab");
+	return 0;
+}
+SUITE_TEST(suite1,test1) {
+	AssertEqStr(g_foop, "blab");
+	return 0;
+}
+
+SUITE_DESTROY(suite1) {
+	free(g_foop); 
+	return 0;
+}
+
+SUITE_SETUP(suite2) {
+	g_foop = strdup("blab");
+	return 0;
+}
+SUITE_TEST(suite2,test2) {
+	AssertEqStr(g_foop, "blab");
+	return 0;
+}
+
+SUITE_DESTROY(suite2) {
+	free(g_foop); 
+	return 0;
+}

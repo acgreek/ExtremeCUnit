@@ -1,0 +1,1 @@
+you must compile with the following flags added to gcc compile line: -pie -rdynamic 

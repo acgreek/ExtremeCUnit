@@ -24,21 +24,22 @@ typedef struct _test_suite_t {
 	char * suite_name;
 	char * filename;
 	int line;
-	enum {UTSS_SETUP, UTSS_DESTROY} function_type;
+	enum {UTSS_SETUP,UTSS_DESTROY} type;
 	void * (*func)(void *);
 } test_suite_t;
 
-#define SUITE_SETUP(SUITE_NAME)  int test_suite_setup_func_ ## SUITE_NAME();\
-	test_suite_t UnitTest_a_unit_test_suite_setup_func_ ## SUITE_NAME = {TEST_MAGIC_STRING, #SUITE_NAME,  __FILE__, __LINE__,UTSS_SETUP,  test_func_ ## SUITE_NAME};\
-	int test_func_ ## NAME() 
+#define SUITE_SETUP(SUITE_NAME)  void * test_suite_setup_func_ ## SUITE_NAME(void *data);\
+	test_suite_t UnitTest_a_unit_test_suite_setup_func_ ## SUITE_NAME = {TEST_MAGIC_STRING, #SUITE_NAME,  __FILE__, __LINE__,UTSS_SETUP,  test_suite_setup_func_ ## SUITE_NAME};\
+	void * test_suite_setup_func_ ## SUITE_NAME(void *data) 
 
-#define SUITE_DESTROY(SUITE_NAME)  int test_suite_setup_func_ ## SUITE_NAME();\
-	test_suite_t UnitTest_a_unit_test_suite_destroyfunc_ ## SUITE_NAME = {TEST_MAGIC_STRING, #SUITE_NAME,  __FILE__, __LINE__,UTSS_DESTROY,  test_func_ ## SUITE_NAME};\
-	int test_func_ ## NAME() 
+#define SUITE_DESTROY(SUITE_NAME)  void *test_suite_destroy_func_ ## SUITE_NAME(void *data);\
+	test_suite_t UnitTest_a_unit_test_suite_destroy_func_ ## SUITE_NAME = {TEST_MAGIC_STRING, #SUITE_NAME,  __FILE__, __LINE__,UTSS_DESTROY,  test_suite_destroy_func_ ## SUITE_NAME};\
+	void * test_suite_destroy_func_ ## SUITE_NAME(void *data) 
 
 #define TEST(NAME)  int test_func_ ## NAME(void);\
 	test_results_t UnitTest_a_test_to_run_ ## NAME = {TEST_MAGIC_STRING, UNITTEST_GLOBAL_SUITE, #NAME, __FILE__, __LINE__, test_func_ ## NAME};\
 	int test_func_ ## NAME(void) 
+
 
 #define SUITE_TEST(SUITE_NAME,NAME)  int test_func_ ## NAME();\
 	test_results_t UnitTest_a_test_to_run_ ## NAME = {TEST_MAGIC_STRING, #SUITE_NAME, #NAME, __FILE__, __LINE__, test_func_ ## NAME};\

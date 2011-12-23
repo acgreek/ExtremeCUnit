@@ -44,6 +44,9 @@ clean_profiling:
 run: test clean_profiling
 	./test
 
+runv: test clean_profiling
+	./test -v
+
 coverage:test clean_profiling
 	lcov --directory obj --zerocounters
 	./test
