@@ -1,5 +1,6 @@
 *.o
 *.gcda
+*.gcno
 .dep/
 *.so
 test
