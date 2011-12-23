@@ -45,7 +45,7 @@ SUITE_TEST(suite1,test1) {
 	AssertEqStr(g_foop, "blab");
 	return 0;
 }
-SUITE_TEST(suite1,test1_1) {
+SUITE_TEST(suite1,test2) {
 	AssertEqStr(g_foop, "blab");
 	return 0;
 }
