@@ -47,7 +47,7 @@ void segv_handler(int sig) {
 int run_test_in_child_stack_monitor(execute_context_t * ecp, test_results_t *testp, UNUSED void * ptr){ 
 	g_running_test= testp;
 	signal(SIGSEGV, segv_handler);
-	int results = 0 == testp->func() ? 0 : 1;
+	int results = 0 == testp->func(ptr) ? 0 : 1;
 	return results;
 }
 int run_test_in_child_memcheck_and_stack_monitor(execute_context_t * ecp, test_results_t *testp){

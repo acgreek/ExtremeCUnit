@@ -45,6 +45,10 @@ SUITE_TEST(suite1,test1) {
 	AssertEqStr(g_foop, "blab");
 	return 0;
 }
+SUITE_TEST(suite1,test1_1) {
+	AssertEqStr(g_foop, "blab");
+	return 0;
+}
 
 SUITE_DESTROY(suite1) {
 	free(g_foop); 
@@ -52,15 +56,14 @@ SUITE_DESTROY(suite1) {
 }
 
 SUITE_SETUP(suite2) {
-	g_foop = strdup("blab");
-	return 0;
+	return  strdup("blab");
 }
-SUITE_TEST(suite2,test2) {
-	AssertEqStr(g_foop, "blab");
+SUITE_TESTV(suite2,test2, local_ptr) {
+	AssertEqStr((char *)local_ptr, "blab");
 	return 0;
 }
 
-SUITE_DESTROY(suite2) {
-	free(g_foop); 
+SUITE_DESTROYV(suite2, local_ptr) {
+	free(local_ptr);
 	return 0;
 }

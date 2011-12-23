@@ -16,7 +16,7 @@ typedef struct _test_results_t {
 	const char * test_name;
 	const char * filename;
 	int line;
-	int (*func)(void);
+	int (*func)(void *);
 }test_results_t;
 
 typedef struct _test_suite_t {
@@ -36,14 +36,24 @@ typedef struct _test_suite_t {
 	test_suite_t UnitTest_a_unit_test_suite_destroy_func_ ## SUITE_NAME = {TEST_MAGIC_STRING, #SUITE_NAME,  __FILE__, __LINE__,UTSS_DESTROY,  test_suite_destroy_func_ ## SUITE_NAME};\
 	void * test_suite_destroy_func_ ## SUITE_NAME(void *data) 
 
-#define TEST(NAME)  int test_func_ ## NAME(void);\
-	test_results_t UnitTest_a_test_to_run_ ## NAME = {TEST_MAGIC_STRING, UNITTEST_GLOBAL_SUITE, #NAME, __FILE__, __LINE__, test_func_ ## NAME};\
-	int test_func_ ## NAME(void) 
+#define SUITE_DESTROYV(SUITE_NAME,VAR)  void *test_suite_destroy_func_ ## SUITE_NAME(void *);\
+	test_suite_t UnitTest_a_unit_test_suite_destroy_func_ ## SUITE_NAME = {TEST_MAGIC_STRING, #SUITE_NAME,  __FILE__, __LINE__,UTSS_DESTROY,  test_suite_destroy_func_ ## SUITE_NAME};\
+	void * test_suite_destroy_func_ ## SUITE_NAME(void *VAR) 
+#define TEST(NAME)  int test_func_ ## NAME();\
+	test_results_t UnitTest_a_test_to_run_ ## NAME = {TEST_MAGIC_STRING, UNITTEST_GLOBAL_SUITE, #NAME, __FILE__, __LINE__,(int (*)(void*)) test_func_ ## NAME};\
+	int test_func_ ## NAME() 
 
+#define TESTV(NAME,VAR)  int test_func_ ## NAME(void*);\
+	test_results_t UnitTest_a_test_to_run_ ## NAME = {TEST_MAGIC_STRING, UNITTEST_GLOBAL_SUITE, #NAME, __FILE__, __LINE__, test_func_ ## NAME};\
+	int test_func_ ## NAME(void* ##VAR) 
 
 #define SUITE_TEST(SUITE_NAME,NAME)  int test_func_ ## NAME();\
 	test_results_t UnitTest_a_test_to_run_ ## NAME = {TEST_MAGIC_STRING, #SUITE_NAME, #NAME, __FILE__, __LINE__, test_func_ ## NAME};\
 	int test_func_ ## NAME() 
+
+#define SUITE_TESTV(SUITE_NAME,NAME,VAR)  int test_func_ ## NAME(void * );\
+	test_results_t UnitTest_a_test_to_run_ ## NAME = {TEST_MAGIC_STRING, #SUITE_NAME, #NAME, __FILE__, __LINE__, test_func_ ## NAME};\
+	int test_func_ ## NAME(void * VAR) 
 
 #ifdef __cplusplus
 extern "C"  {
