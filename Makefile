@@ -17,8 +17,8 @@ UNIT_TEST_SRC= unittest_tests.c unittest_cpp_tests.cc
 INC_FILE_NAMES=$(SRC:.c=.P)
 INCLUDES=$(patsubst %,$(DEPDIR)/%,$(INC_FILE_NAMES))
 
--include $(INCLUDES)
 all: run
+-include $(INCLUDES)
 
 $(OBJDIR)/%.o : %.c
 	mkdir -p $(OBJDIR); \

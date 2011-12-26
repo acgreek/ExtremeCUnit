@@ -1,1 +1,23 @@
-you must compile with the following flags added to gcc compile line: -pie -rdynamic 
+to install, execute:
+- make runv
+- # the library should build and all tests should pass 
+- sudo make install # this will install the library and header files off the /usr prefix
+
+to build your unit test binary, add the follow to your CFLAGS and/or CXXFLAGS: `pkg-config ExtremeCUnit --cflags`
+and add to your LDFLAGS: `pkg-config ExtremeCUnit --libs`
+
+
+
+you can write your unit tests in a separate file or include them in same files as the rest of your source code. You can encapsolate code you don't want include in the release binary via 
+#ifdef UNIT_TEST 
+TEST() {
+...
+}
+...
+#endif
+
+if your binary already has a main function, you will need to encapsolate it in 
+#ifndef UNIT_TEST
+int main(.. ){
+}
+#endif
