@@ -124,7 +124,16 @@ int run_test(execute_context_t * ecp, test_results_t *testp) {
 void executeTest(ListNode_t * nodep, void * datap) {
 	execute_context_t * ecp = (execute_context_t *) datap;
 	test_element_t *sp = NODE_TO_ENTRY(test_element_t,link,nodep);
+	if (UTTT_PERFORMANCE == sp->test.test_type && ecp->configp->run_perf_tests == 0) {
+		if (ecp->configp->verbose) {
+			test_results_t *testp = &sp->test;
+			fprintf(ecp->configp->output_fd, "skipping performance test %s in file %s at line %d (to run this test add -p to command line\n", testp->test_name,testp->filename, testp->line);
+		}
+		return ;
+	}
 	ecp->result += run_test(ecp, &sp->test) ;
+	if (ecp->result > 0 && ecp->configp->stop_after_one_failed_test) 
+		exit(-1);
 }
 void executeSuite(ListNode_t * nodep, void * datap) {
 	execute_context_t * ecp = (execute_context_t *) datap;

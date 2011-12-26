@@ -35,6 +35,11 @@ TEST(string_test) {
 	*/
 	return 0;
 }
+TEST_T(string_perf, UTTT_PERFORMANCE) {
+	AssertEqStr("bla" "bla", "blabla");
+	AssertEqStr(NULL, NULL);
+	return 0 ;
+}
 char *g_foop = 0;
 
 SUITE_SETUP(suite1) {
@@ -58,7 +63,7 @@ SUITE_DESTROY(suite1) {
 SUITE_SETUP(suite2) {
 	return  strdup("blab");
 }
-SUITE_TESTV(suite2,test2, local_ptr) {
+SUITE_TEST_V(suite2,test2, local_ptr) {
 	AssertEqStr((char *)local_ptr, "blab");
 	return 0;
 }

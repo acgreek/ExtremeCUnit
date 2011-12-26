@@ -9,6 +9,8 @@ typedef struct _ut_configuration_t {
 	int verbose;
 	char * gdb_test;
 	char rerun_in_debugger;
+	char run_perf_tests;
+	char stop_after_one_failed_test;
 } ut_configuration_t;
-#define UT_CONFIGURATION_DEFAULT {argv[0], stdout,NULL,0,NULL}
+#define UT_CONFIGURATION_DEFAULT {argv[0], stdout,NULL,0,NULL,0,0,0}
 #endif

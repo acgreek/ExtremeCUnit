@@ -24,13 +24,19 @@ void usage(int argc, char * argv[]) {
 
 static void readCmdConfig(int argc, char * argv[], ut_configuration_t *configp) {
 	int option;
-	while (-1 != (option =getopt(argc,argv, "g:Gv"))) {
+	while (-1 != (option =getopt(argc,argv, "g:Gv1p"))) {
 		switch (option) {
 			case 'G':
 				configp->rerun_in_debugger = 1;
 				break;
 			case 'g':
 				configp->gdb_test = optarg;		
+				break;
+			case '1': 
+				configp->stop_after_one_failed_test= 1;		
+				break;
+			case 'p':
+				configp->run_perf_tests = 1;
 				break;
 			case 'v':
 				configp->verbose = 1;		
