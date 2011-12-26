@@ -1,7 +1,7 @@
 #ifndef SUITE_AND_TEST_LIST_WRAPPER_H
 #define SUITE_AND_TEST_LIST_WRAPPER_H
 
-#include "unittest.h"
+#include "ExtremeCUnit.h"
 #include "linkedlist.h"
 
 typedef struct _test_suite_element_t {

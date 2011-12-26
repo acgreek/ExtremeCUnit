@@ -1,11 +1,16 @@
 CFLAGS=-Wall -ggdb -fPIC -fprofile-arcs -ftest-coverage 
 DEPDIR = .dep
 OBJDIR = obj
+INSTALL_PREFIX = /usr
 CC=gcc
 SRC=main.c runner.c findtest_names.c assert_support.c
 MAKEDEPEND = gcc -M $(CFLAGS) -o $*.d $<
 OBJ_FILE_NAMES=$(SRC:.c=.o)
 OBJS=$(patsubst %,$(OBJDIR)/%,$(OBJ_FILE_NAMES))
+
+SHARE_LIBRARY_TARGET = libExtremeCUnit.so
+HEADER_FILE = ExtremeCUnit.h
+PKGCONFIG_FILE = ExtremeCUnit.pc
 
 UNIT_TEST_SRC= unittest_tests.c unittest_cpp_tests.cc
 
@@ -24,18 +29,21 @@ $(OBJDIR)/%.o : %.c
 	$(COMPILE.c) -o $@ $< ;\
 	rm -f $*.d;  
 
-libunittest.so:	$(OBJS)
-	$(CC) $(CFLAGS) -o libunittest.so -shared  $(OBJS) 
+$(SHARE_LIBRARY_TARGET):$(OBJS)
+	$(CC) $(CFLAGS) -o $@ -shared $(OBJS) 
 
-install: libunittest.so
-	mkdir -p ~/lib
-	mkdir -p ~/include	
-	cp libunittest.so ~/lib
+install: $(SHARE_LIBRARY_TARGET)
+	mkdir -p $(INSTALL_PREFIX)/lib
+	mkdir -p $(INSTALL_PREFIX)/include	
+	mkdir -p $(INSTALL_PREFIX)/lib/pkgconfig
+	cp $(SHARE_LIBRARY_TARGET) $(INSTALL_PREFIX)/lib
+	cp $(HEADER_FILE) $(INSTALL_PREFIX)/include
+	cp $(PKGCONFIG_FILE) $(INSTALL_PREFIX)/lib/pkgconfig
 
-test: $(UNIT_TEST_SRC) libunittest.so
-	$(CC) -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,. -DUNIT_TEST -o $@ $(UNIT_TEST_SRC) libunittest.so  -ldl  -lstdc++
+test: $(UNIT_TEST_SRC) $(SHARE_LIBRARY_TARGET)
+	$(CC) -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,. -DUNIT_TEST -o $@ $< $(SHARE_LIBRARY_TARGET) -ldl  -lstdc++
 
-.PHONY: clean clean_profiling run coverage
+.PHONY: clean clean_profiling run coverage install
 
 clean_profiling:
 	find . -name '*.gcda' | xargs -r rm 
@@ -54,4 +62,4 @@ coverage:test clean_profiling
 	genhtml obj/app.info -o html
 
 clean:  clean_profiling
-	rm $(OBJS) test libunittest.so  -rf
+	rm $(OBJS) test  $(SHARE_LIBRARY_TARGET) -rf
