@@ -96,8 +96,9 @@ int run_test_forked_in_gdb(execute_context_t * ecp, test_results_t *testp){
 	char * tempfile = create_tempfile(buffer,testp->suite_name, testp->test_name);
 	pid_t child_pid = run_test_forked_h1(ecp, testp,1);
 	char bufferp[2000];
+	char * gdb_bin = getenv("GDB");
 
-	sprintf(bufferp, "gdb -x %s -q -p %u",tempfile,  child_pid);
+	sprintf(bufferp, "%s -x %s -q -p %u",NULL == gdb_bin? "gdb": gdb_bin,tempfile,  child_pid);
 	system (bufferp);
 	waitpid(child_pid, &status,0);
 	unlink(buffer);
