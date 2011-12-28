@@ -21,3 +21,18 @@ if your binary already has a main function, you will need to encapsolate it in
 int main(.. ){
 }
 #endif
+
+
+To use the -g or -G command line args, your effective user must be root or /proc/sys/kernel/yama/ptrace_scope
+needs to be to 0. You can use the following command to set.
+
+echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+
+this setting will go away after the system restarts. To make prem. edit /etc/sysctl.d/10-ptrace.conf and change the line:
+
+kernel.yama.ptrace_scope = 1
+
+To read
+
+kernel.yama.ptrace_scope = 0
+
