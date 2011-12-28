@@ -52,7 +52,7 @@ typedef struct _test_suite_t {
 	int test_suite_global_func_ ## NAME() 
 
 #define TEST_V(NAME,VAR)  int test_suite_global_func_ ## NAME(void*);\
-	test_results_t UnitTest_a_test_to_run_global_ ## NAME = {TEST_MAGIC_STRING, UNITTEST_GLOBAL_SUITE, #NAME, __FILE__, __LINE__, test_func_ ## NAME, UTTT_UNIT};\
+	test_results_t UnitTest_a_test_to_run_global_ ## NAME = {TEST_MAGIC_STRING, UNITTEST_GLOBAL_SUITE, #NAME, __FILE__, __LINE__, test_suite_global_func_ ## NAME, UTTT_UNIT};\
 	int test_suite_global_func_ ## NAME(void* ##VAR) 
 
 #define TEST_VT(NAME,VAR,TEST_TYPE)  int test_suite_global_func_ ## NAME(void*);\

@@ -21,13 +21,13 @@ typedef struct _execute_context_t{
 	int result;
 }execute_context_t;
 
-char * create_tempfile(char * filename,const  char * test_name){
+char * create_tempfile(char * filename,const  char * suite_name, const  char * test_name){
 	FILE * fid = fopen (filename, "w");
 	if (NULL == fid){
 		perror("opening file:");
 		exit(-1);
 	}
-	fprintf(fid, "break %s%s\n","test_func_", test_name);
+	fprintf(fid, "break %s%s%s%s\n","test_suite_", suite_name, "_func_", test_name);
 	fprintf(fid, "c\n");
 	fclose(fid);
 	return filename;
@@ -91,7 +91,7 @@ int run_test_forked(execute_context_t * ecp, test_results_t *testp){
 int run_test_forked_in_gdb(execute_context_t * ecp, test_results_t *testp){
 	int status;
 	char buffer[100] = "unittest_XXXXXX";
-	char * tempfile = create_tempfile(buffer, testp->test_name);
+	char * tempfile = create_tempfile(buffer,testp->suite_name, testp->test_name);
 	pid_t child_pid = run_test_forked_h1(ecp, testp,1);
 	char bufferp[2000];
 	sprintf(bufferp, "gdb -x %s -q -p %u",tempfile,  child_pid);
