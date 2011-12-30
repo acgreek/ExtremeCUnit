@@ -10,4 +10,4 @@ Description: ExtremeCUnit unit C/C++ unit test
 Version: ${version}
 Requires: 
 Libs: -lExtremeCUnit -ldl
-Cflags: -pie -rdynamic
+Cflags: -fPIC -pie -rdynamic
