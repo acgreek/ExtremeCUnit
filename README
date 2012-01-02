@@ -1,3 +1,16 @@
+Why another unit test framework? Honestly, I haven't tried all free unit test frameworks out there but I have used a few over the years. Everyone I used was had some trivial issue I felt need more work. I could have just contributed to one of the existing opensourced projects but give that my ideal frame work is fairly minimalist I decided to write my own.
+
+Features:
+-integration with vim's gcc error handling. If you setup 'make' to run your tests from with in vim (for example via ':make test' or something like that) the unit test error messages are in the proper format that vim knows how to such when vim return from running 'make' the curser is set to the line where the first error occurred and you can use ':cn' to move the curser to next error.
+-Suites and fixtures supported.
+-tests do no need to be manually called from in some main function, the test function only needs to written properly and it will automatically execute 
+-tests run in forked subprocess
+-memory leaks are detected, though currently only the entire test to reported is reported as leaking, the actual line where the memory was allocated is not intentified.
+-when '-G' command line arg is used, any test that fails will be re-started in a gdb at the start of the test fuction.
+-minimalist output. By default, if all tests pass, no output is displayed. There is an argument to get a test report.
+-By default, performance tests are not run because often they are slow. All unit test should not take a lot of execution time.
+
+
 to install, execute:
 - make runv
 - # the library should build and all tests should pass 
