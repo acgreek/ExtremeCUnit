@@ -1,4 +1,5 @@
-CFLAGS=$(CFLAGS_DIST) -Wall -ggdb -fPIC -fprofile-arcs -ftest-coverage
+COVERAGE_CFLAGS= -fprofile-arcs -ftest-coverage
+CFLAGS=$(CFLAGS_DIST)  $(COVERAGE_CFLAGS) -Wall -ggdb -fPIC 
 DEPDIR = .dep
 OBJDIR = obj$(DIR_SUFFIX)
 DISTDIR = dist$(DIR_SUFFIX)

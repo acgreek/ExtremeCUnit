@@ -8,10 +8,27 @@ int ut_assertStatement(int result, const char *statement, const char * filename,
 	}
 	return 1== result? 0: 1;
 }
-int ut_assertStatementEqInt(int real, const int expect, const char *statement, char * filename, int line) {
-	int result =real == expect; 
+int ut_assertStatementOptInt(const int real, const int expect,const int  result, const char *operator, char * filename, int line) {
 	if (!result) {
-		fprintf(stderr, "%s:%d:0 statement failed: %s: expected %d but was %d\n", filename, line, statement, expect, real);
+		fprintf(stderr, "%s:%d:0 statement failed: %d %s %d\n", filename, line,real, operator, expect);
+	}
+	return 1== result? 0: 1;
+}
+int ut_assertStatementOptLong(const long real, const long expect,const int  result, const char *operator, char * filename, int line) {
+	if (!result) {
+		fprintf(stderr, "%s:%d:0 statement failed: %ld %s %ld\n", filename, line,real, operator, expect);
+	}
+	return 1== result? 0: 1;
+}
+int ut_assertStatementOptFloat(const float real, const float expect,const int  result, const char *operator, char * filename, int line) {
+	if (!result) {
+		fprintf(stderr, "%s:%d:0 statement failed: %g %s %g\n", filename, line,real, operator, expect);
+	}
+	return 1== result? 0: 1;
+}
+int ut_assertStatementOptDouble(const double real, const double expect,const int  result, const char *operator, char * filename, int line) {
+	if (!result) {
+		fprintf(stderr, "%s:%d:0 statement failed: %g %s %g\n", filename, line,real, operator, expect);
 	}
 	return 1== result? 0: 1;
 }

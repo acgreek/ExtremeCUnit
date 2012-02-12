@@ -80,13 +80,19 @@ typedef struct _test_suite_t {
 extern "C"  {
 #endif
 int ut_assertStatement(int result,const char *statement,const char * filename, int line);
-int ut_assertStatementEqInt(int real, int exected,const char *statement,const char * filename, int line);
+int ut_assertStatementOptInt(int real, int exected,int result, const char *statement,const char * filename, int line);
 int ut_assertStatementEqStr(const char * real,const char * expected ,const char *statement,const char * filename, int line);
+int ut_assertStatementOptLong(const long real, const long expect,const int  result, const char *operator, char * filename, int line);
+int ut_assertStatementOptFloat(const float real, const float expect,const int  result, const char *operator, char * filename, int line);
+int ut_assertStatementOptDouble(const double real, const double expect,const int  result, const char *operator, char * filename, int line);
 #ifdef __cplusplus
 }
 #endif
 #define Assert(STATEM) if (ut_assertStatement(STATEM, #STATEM, __FILE__, __LINE__)){return -1;}
-#define AssertEqInt(STATEM, expect) if (ut_assertStatementEqInt(STATEM,expect, #STATEM, __FILE__, __LINE__)){return -1;}
+#define AssertEqInt(STATEM, expect) if (ut_assertStatementOptInt(STATEM,expect,STATEM == expect,  "==", __FILE__, __LINE__)){return -1;}
+#define AssertOptInt(STATEM,OPT, expect) if (ut_assertStatementOptInt(STATEM,expect,STATEM OPT expect,#OPT , __FILE__, __LINE__)){return -1;}
+#define AssertOptFloat(STATEM,OPT, expect) if (ut_assertStatementOptFloat(STATEM,expect,STATEM OPT expect,#OPT , __FILE__, __LINE__)){return -1;}
+#define AssertOptDouble(STATEM,OPT, expect) if (ut_assertStatementOptDouble(STATEM,expect,STATEM OPT expect,#OPT , __FILE__, __LINE__)){return -1;}
 #define AssertEqStr(STATEM, expect) if (ut_assertStatementEqStr(STATEM,expect, #STATEM, __FILE__, __LINE__)){return -1;}
 
 #endif 

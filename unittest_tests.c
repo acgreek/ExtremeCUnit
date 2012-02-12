@@ -18,6 +18,9 @@ TEST(chomp_test_remove) {
 }
 TEST(int_test) {
 	AssertEqInt(10 , 0xa);
+	AssertOptInt(10 , <, 11);
+	AssertOptDouble(10.3, <, 11.4);
+	AssertOptDouble(10.3, <, 10.4);
 	return 0;
 }
 #include <stdlib.h>
