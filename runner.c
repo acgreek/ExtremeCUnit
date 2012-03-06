@@ -52,8 +52,16 @@ int run_test_in_child_stack_monitor(execute_context_t * ecp, test_results_t *tes
 	int results = 0 == testp->func(ptr) ? 0 : 1;
 	return results;
 }
+#include <time.h>
+static void call_std_leaky_func() {
+	time_t now = time(NULL);
+	char foo[100];
+	snprintf(foo, sizeof(foo)-1, "foo %s\n", ctime(&now));
+
+}
 int run_test_in_child_memcheck_and_stack_monitor(execute_context_t * ecp, test_results_t *testp){
 	struct mallinfo start_mem, end_mem;
+	call_std_leaky_func();
 	start_mem= mallinfo();
 
 	void *ptr;

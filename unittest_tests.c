@@ -23,6 +23,14 @@ TEST(int_test) {
 	AssertOptDouble(10.3, <, 10.4);
 	return 0;
 }
+#include <time.h>
+TEST(ctime_should_not_leak) {
+	time_t now = time(NULL);
+	char foo[100];
+	snprintf(foo, sizeof(foo)-1, "foo %s\n", ctime(&now));
+	return 0;
+
+}
 #include <stdlib.h>
 TEST(string_test) {
 	AssertEqStr("bla" "bla", "blabla");
