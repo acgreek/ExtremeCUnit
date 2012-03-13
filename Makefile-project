@@ -1,0 +1,7 @@
+SHARED_LIBRARY=libExtremeCUnit.so
+MAJOR_VERSION=0.9
+MINOR_VERSION=0
+SRC=main.c runner.c findtest_names.c assert_support.c
+HEADER_FILE = ExtremeCUnit.h
+PKGCONFIG_FILE = ExtremeCUnit.pc
+UNIT_TEST_SRC= unittest_tests.c unittest_cpp_tests.cc

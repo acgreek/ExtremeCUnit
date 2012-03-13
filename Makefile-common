@@ -1,3 +1,4 @@
+-include Makefile-project
 COVERAGE_CFLAGS= -fprofile-arcs -ftest-coverage
 CFLAGS=$(CFLAGS_DIST)  $(COVERAGE_CFLAGS) -Wall -ggdb -fPIC 
 DEPDIR = .dep
@@ -5,16 +6,13 @@ OBJDIR = obj$(DIR_SUFFIX)
 DISTDIR = dist$(DIR_SUFFIX)
 INSTALL_PREFIX = /usr
 CC=gcc
-SRC=main.c runner.c findtest_names.c assert_support.c
 MAKEDEPEND = gcc -M $(CFLAGS) -o $*.d $<
 OBJ_FILE_NAMES=$(SRC:.c=.o)
 OBJS=$(patsubst %,$(OBJDIR)/%,$(OBJ_FILE_NAMES))
 
-SHARE_LIBRARY_TARGET = $(DISTDIR)/libExtremeCUnit.so
-HEADER_FILE = ExtremeCUnit.h
-PKGCONFIG_FILE = ExtremeCUnit.pc
-
-UNIT_TEST_SRC= unittest_tests.c unittest_cpp_tests.cc
+SHARE_LIBRARY_TARGET = $(DISTDIR)/$(SHARED_LIBRARY)
+VERSION=$(MAJOR_VERSION).$(MINOR_VERSION)
+SHARE_LIBRARY_TARGET_VERSION = $(SHARE_LIBRARY_TARGET).$(VERSION)
 
 INC_FILE_NAMES=$(SRC:.c=.P)
 INCLUDES=$(patsubst %,$(DEPDIR)/%,$(INC_FILE_NAMES))
@@ -31,20 +29,23 @@ $(OBJDIR)/%.o : %.c
 	$(COMPILE.c) $(CFLAGS) -o $@ $< ;\
 	rm -f $*.d;  
 
-$(SHARE_LIBRARY_TARGET):$(OBJS)
+$(SHARE_LIBRARY_TARGET_VERSION):$(OBJS)
 	mkdir -p $(DISTDIR); \
-	$(CC) $(CFLAGS) -o $@ -shared $(OBJS) 
+	$(CC) $(CFLAGS) -Wl,-soname,$(SHARED_LIBRARY).$(MAJOR_VERSION) -o $@ -shared $(OBJS) 
+	ldconfig -l $@
 
-install: $(SHARE_LIBRARY_TARGET)
+install: $(SHARE_LIBRARY_TARGET_VERSION)
 	mkdir -p $(INSTALL_PREFIX)/lib
 	mkdir -p $(INSTALL_PREFIX)/include	
 	mkdir -p $(INSTALL_PREFIX)/lib/pkgconfig
-	cp $(SHARE_LIBRARY_TARGET) $(INSTALL_PREFIX)/lib
+	cp $(SHARE_LIBRARY_TARGET_VERSION) $(INSTALL_PREFIX)/lib
 	cp $(HEADER_FILE) $(INSTALL_PREFIX)/include
 	cp $(PKGCONFIG_FILE) $(INSTALL_PREFIX)/lib/pkgconfig
+	ldconfig -l $(INSTALL_PREFIX)/lib/$(SHARED_LIBRARY).$(VERSION)
+	ln -sf $(INSTALL_PREFIX)/lib/$(SHARED_LIBRARY).$(VERSION) $(INSTALL_PREFIX)/lib/$(SHARED_LIBRARY)
 
-$(DISTDIR)/test: $(UNIT_TEST_SRC) $(SHARE_LIBRARY_TARGET)
-	$(CC) -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,. -DUNIT_TEST -o $@ $< $(SHARE_LIBRARY_TARGET) -ldl  -lstdc++
+$(DISTDIR)/test: $(UNIT_TEST_SRC) $(SHARE_LIBRARY_TARGET_VERSION)
+	$(CC) -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,.,--rpath,dist -DUNIT_TEST -o $@ $< $(SHARE_LIBRARY_TARGET_VERSION) -ldl  -lstdc++
 
 .PHONY: clean clean_profiling run coverage install
 
@@ -65,4 +66,4 @@ coverage:$(DISTDIR)/test clean_profiling
 	genhtml obj/app.info -o html
 
 clean:  clean_profiling
-	rm $(DISTDIR) $(OBJS) $(SHARE_LIBRARY_TARGET) -rf
+	rm $(DISTDIR) $(OBJS) $(SHARE_LIBRARY_TARGET_VERSION) -rf
