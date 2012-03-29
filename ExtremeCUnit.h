@@ -82,9 +82,9 @@ extern "C"  {
 int ut_assertStatement(int result,const char *statement,const char * filename, int line);
 int ut_assertStatementOptInt(int real, int exected,int result, const char *statement,const char * filename, int line);
 int ut_assertStatementEqStr(const char * real,const char * expected ,const char *statement,const char * filename, int line);
-int ut_assertStatementOptLong(const long real, const long expect,const int  result, const char *operator, char * filename, int line);
-int ut_assertStatementOptFloat(const float real, const float expect,const int  result, const char *operator, char * filename, int line);
-int ut_assertStatementOptDouble(const double real, const double expect,const int  result, const char *operator, char * filename, int line);
+int ut_assertStatementOptLong(const long real, const long expect,const int  result, const char *oper, char * filename, int line);
+int ut_assertStatementOptFloat(const float real, const float expect,const int  result, const char *oper, char * filename, int line);
+int ut_assertStatementOptDouble(const double real, const double expect,const int  result, const char *oper, char * filename, int line);
 #ifdef __cplusplus
 }
 #endif
