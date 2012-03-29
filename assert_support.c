@@ -8,7 +8,7 @@ int ut_assertStatement(int result, const char *statement, const char * filename,
 	}
 	return 1== result? 0: 1;
 }
-int ut_assertStatementOptInt(const int real, const int expect,const int  result, const char *operator, char * filename, int line) {
+int ut_assertStatementOptInt(const int real, const int  expect, const int  result, const char *operator, char * filename, int line) {
 	if (!result) {
 		fprintf(stderr, "%s:%d:0 statement failed: %d %s %d\n", filename, line,real, operator, expect);
 	}

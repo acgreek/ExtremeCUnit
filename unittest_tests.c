@@ -23,6 +23,24 @@ TEST(int_test) {
 	AssertOptDouble(10.3, <, 10.4);
 	return 0;
 }
+TEST(int_test_opt_should_not_call_twice) {
+	int f=0;
+	AssertOptInt(++f, ==, 1);
+	AssertOptInt(++f, ==, 2);
+	AssertEqInt(++f, 3);
+	AssertEqInt(++f, 4);
+
+	float flo=0;
+	AssertOptFloat(++flo, ==, 1);
+	AssertOptFloat(++flo, ==, 2);
+	double dl=0;
+	AssertOptFloat(++dl, ==, 1);
+	AssertOptFloat(++dl, ==, 2);
+	long ll=0;
+	AssertOptFloat(++ll, ==, 1);
+	AssertOptFloat(++ll, ==, 2);
+	return 0;
+}
 #include <time.h>
 TEST(ctime_should_not_leak) {
 	time_t now = time(NULL);

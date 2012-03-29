@@ -89,10 +89,10 @@ int ut_assertStatementOptDouble(const double real, const double expect,const int
 }
 #endif
 #define Assert(STATEM) if (ut_assertStatement(STATEM, #STATEM, __FILE__, __LINE__)){return -1;}
-#define AssertEqInt(STATEM, expect) if (ut_assertStatementOptInt(STATEM,expect,STATEM == expect,  "==", __FILE__, __LINE__)){return -1;}
-#define AssertOptInt(STATEM,OPT, expect) if (ut_assertStatementOptInt(STATEM,expect,STATEM OPT expect,#OPT , __FILE__, __LINE__)){return -1;}
-#define AssertOptFloat(STATEM,OPT, expect) if (ut_assertStatementOptFloat(STATEM,expect,STATEM OPT expect,#OPT , __FILE__, __LINE__)){return -1;}
-#define AssertOptDouble(STATEM,OPT, expect) if (ut_assertStatementOptDouble(STATEM,expect,STATEM OPT expect,#OPT , __FILE__, __LINE__)){return -1;}
+#define AssertEqInt(STATEM, expect) {int ExtremeCUnitInt= STATEM ;if (ut_assertStatementOptInt(ExtremeCUnitInt,expect,ExtremeCUnitInt == expect,  "==", __FILE__, __LINE__)){return -1;} }
+#define AssertOptInt(STATEM,OPT, expect) {int ExtremeCUnitInt= STATEM ; if (ut_assertStatementOptInt(ExtremeCUnitInt ,expect,ExtremeCUnitInt OPT expect,#OPT , __FILE__, __LINE__)){return -1;} }
+#define AssertOptFloat(STATEM,OPT, expect) {int ExtremeCUnitFloat=STATEM; if (ut_assertStatementOptFloat(ExtremeCUnitFloat,expect,ExtremeCUnitFloat OPT expect,#OPT , __FILE__, __LINE__)){return -1;} }
+#define AssertOptDouble(STATEM,OPT, expect) {double ExtremeCUnitDouble=STATEM; if (ut_assertStatementOptDouble(ExtremeCUnitDouble,expect,ExtremeCUnitDouble OPT expect,#OPT , __FILE__, __LINE__)){return -1;} } 
 #define AssertEqStr(STATEM, expect) if (ut_assertStatementEqStr(STATEM,expect, #STATEM, __FILE__, __LINE__)){return -1;}
 
 #endif 
