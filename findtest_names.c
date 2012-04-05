@@ -17,12 +17,12 @@ void chomp(char *str) {
 		str++;
 	}
 }
-int isSuite(ListNode_t * nodep, void * datap) {
+static int isSuite(ListNode_t * nodep, void * datap) {
 	char * suite_name = (char *) datap;
 	test_suite_element_t *sp = NODE_TO_ENTRY(test_suite_element_t,link,nodep);
 	return 0==strcmp(suite_name, sp->suite.suite_name);
 }
-void addTestToSuites(test_element_t *e,ListNode_t * test_suites_list_headp) {
+static void addTestToSuites(test_element_t *e,ListNode_t * test_suites_list_headp) {
 	ListNode_t * listp = ListFind(test_suites_list_headp,isSuite, (char *)e->test.suite_name);
 	if (NULL == listp) {
 		test_suite_element_t *sp = create_test_suite_element( (char *)e->test.suite_name);

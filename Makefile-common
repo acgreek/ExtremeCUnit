@@ -47,7 +47,7 @@ install: $(SHARE_LIBRARY_TARGET_VERSION)
 $(DISTDIR)/test: $(UNIT_TEST_SRC) $(SHARE_LIBRARY_TARGET_VERSION)
 	$(CC) -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,.,--rpath,dist -DUNIT_TEST -o $@ $< $(SHARE_LIBRARY_TARGET_VERSION) -ldl  -lstdc++
 
-.PHONY: clean clean_profiling run coverage install
+.PHONY: clean clean_profiling run runv coverage install
 
 clean_profiling:
 	find . -name '*.gcda' | xargs -r rm 
