@@ -9,5 +9,5 @@ Name: ExtremeCUnit
 Description: ExtremeCUnit unit C/C++ unit test 
 Version: ${version}
 Requires: 
-Libs: -lExtremeCUnit -ldl
-Cflags: -fPIC -pie -rdynamic
+Libs: -pie -Wl,--rpath,.,--rpath,dist -lExtremeCUnit -ldl 
+Cflags: -DUNIT_TEST -fPIC -pie -rdynamic

@@ -15,8 +15,11 @@ int run_tests(ut_configuration_t * configp, ListNode_t *test_suites_list_headp);
 void usage(int argc, char * argv[]) {
 	printf("Usage: %s [OPTION]...\n\n", argv[0]);	
 	printf("Debugging:\n");	
+	printf("   -o TEST_NAME     skip all tests except TEST_NAME\n");	
 	printf("   -g TEST_NAME     skip all tests except TEST_NAME and start TEST_NAME in debugger\n");	
 	printf("   -G               if any test fails, rerun it with debugger\n");
+	printf("   -l               stop after one failed test\n");
+	printf("   -p               run performance tests (performance test don't execute by default)\n");
 	printf("Output:\n");	
 	printf("   -v               verbose, normally only failed test are displayed\n");	
 	
@@ -24,17 +27,19 @@ void usage(int argc, char * argv[]) {
 
 static void readCmdConfig(int argc, char * argv[], ut_configuration_t *configp) {
 	int option;
-	while (-1 != (option =getopt(argc,argv, "g:Gv1p"))) {
+	while (-1 != (option =getopt(argc,argv, "o:g:Gv1p"))) {
 		switch (option) {
 			case 'G':
 				configp->rerun_in_debugger = 1;
 				break;
 			case 'g':
-				configp->gdb_test = optarg;		
+				configp->run_in_debugger = 1;
+				configp->only_test = optarg;		
 				break;
 			case '1': 
 				configp->stop_after_one_failed_test= 1;		
 				break;
+
 			case 'p':
 				configp->run_perf_tests = 1;
 				break;
