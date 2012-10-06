@@ -92,7 +92,12 @@ static void freeSuite(ListNode_t * nodep, UNUSED void * datap) {
 	free(e);
 }
 
+
+#ifdef __CYGWIN__ 
+int windows_main (int argc, char * argv[]) {
+#else 
 int main (int argc, char * argv[]) {
+#endif
 	ut_configuration_t config = UT_CONFIGURATION_DEFAULT;
 	int result = 0;
 
@@ -102,7 +107,13 @@ int main (int argc, char * argv[]) {
 
 	readCmdConfig(argc, argv, &config);
 
-	config.dynlibraryp = dlopen(argv[0], RTLD_NOW);	
+#ifdef __CYGWIN__ 
+	char buffer[10000];
+	snprintf(buffer, sizeof(buffer) -1, "%s.exe",argv[0]);
+	argv[0] = buffer;
+#endif
+	config.dynlibraryp = dlopen(argv[0], RTLD_LAZY) ;
+
 	if (NULL == config.dynlibraryp ) {
 		printf("%s\n", dlerror());
 		return(-1);

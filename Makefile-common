@@ -17,6 +17,18 @@ SHARE_LIBRARY_TARGET_VERSION = $(SHARE_LIBRARY_TARGET).$(VERSION)
 INC_FILE_NAMES=$(SRC:.c=.P)
 INCLUDES=$(patsubst %,$(DEPDIR)/%,$(INC_FILE_NAMES))
 
+ifneq (,$(findstring /cygdrive/,$(PATH)))
+    UNAME := Cygwin
+else
+ifneq (,$(findstring WINDOWS,$(PATH)))
+    UNAME := Windows
+else
+    UNAME := $(shell uname -s)
+endif
+endif
+
+
+
 all: run
 -include $(INCLUDES)
 
@@ -44,8 +56,14 @@ install: $(SHARE_LIBRARY_TARGET_VERSION)
 	ldconfig -l $(INSTALL_PREFIX)/lib/$(SHARED_LIBRARY).$(VERSION)
 	ln -sf $(INSTALL_PREFIX)/lib/$(SHARED_LIBRARY).$(VERSION) $(INSTALL_PREFIX)/lib/$(SHARED_LIBRARY)
 
+ifeq ($(UNAME), Cygwin)
 $(DISTDIR)/test: $(UNIT_TEST_SRC) $(SHARE_LIBRARY_TARGET_VERSION)
-	$(CC) -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,.,--rpath,dist -DUNIT_TEST -o $@ $< $(SHARE_LIBRARY_TARGET_VERSION) -ldl  -lstdc++
+	$(CC) -Wl,--export-all-symbols -shared -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,.,--rpath,dist -DUNIT_TEST -o $@ $< $(SHARE_LIBRARY_TARGET_VERSION) -ldl  -lstdc++
+else 
+$(DISTDIR)/test: $(UNIT_TEST_SRC) $(SHARE_LIBRARY_TARGET_VERSION)
+	 $(CC) -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,.,--rpath,dist -DUNIT_TEST -o $@ $< $(SHARE_LIBRARY_TARGET_VERSION) -ldl  -lstdc++
+
+endif 
 
 .PHONY: clean clean_profiling run runv coverage install
 

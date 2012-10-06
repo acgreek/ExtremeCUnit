@@ -7,9 +7,15 @@
 #define UNIT_TEST
 #include "suite_and_test_list_wrapper.h"
 #undef UNIT_TEST
+#ifdef __CYGWIN__
+#define COMMAND "nm %s |grep UnitTest_a_test_to_run_|cut -d' ' -f 3|grep -E \"^_UnitTest_a_test_to_run_\""
+#define SETUP "nm %s |grep UnitTest_a_unit_test_suite_setup_func_|cut -d' ' -f 3|grep -E \"^_UnitTest_a_unit_test_suite_setup_func_\""
+#define DESTORY "nm %s |grep UnitTest_a_unit_test_suite_destroy_func_|cut -d' ' -f 3|grep -E \"^_UnitTest_a_unit_test_suite_destroy_\""
+#else 
 #define COMMAND "nm %s |grep UnitTest_a_test_to_run_|cut -d' ' -f 3|grep -E \"^UnitTest_a_test_to_run_\""
 #define SETUP "nm %s |grep UnitTest_a_unit_test_suite_setup_func_|cut -d' ' -f 3|grep -E \"^UnitTest_a_unit_test_suite_setup_func_\""
 #define DESTORY "nm %s |grep UnitTest_a_unit_test_suite_destroy_func_|cut -d' ' -f 3|grep -E \"^UnitTest_a_unit_test_suite_destroy_\""
+#endif
 void chomp(char *str) {
 	while ('\0' != *str ) {
 		if (*str == '\n')
@@ -36,6 +42,10 @@ static void addTestToSuites(test_element_t *e,ListNode_t * test_suites_list_head
 void loadTestStruct(ListNode_t *test_suites_list_headp, char *line,ut_configuration_t *configp) {
 	test_results_t *trp;
 	trp = dlsym(configp->dynlibraryp, line);
+	if (trp == NULL) {
+		printf("failed to load test: %s: %s\n",line, dlerror());
+		return;
+	}
 	test_element_t * e = create_test_element(trp);
 	addTestToSuites(e, test_suites_list_headp);
 }
@@ -60,7 +70,16 @@ void loadSuiteDestroy(ListNode_t *test_suites_list_headp, char *line,ut_configur
 	memcpy(&sp->destroy, trp, sizeof(test_suite_t));
 
 }
-
+#ifdef __CYGWIN__
+void removeLeadingUnderscore (char *line)  {
+	if (line[0] != '_')
+		return;
+	int i;
+	for (i=0; line[i] != '\0'; i++) {
+		line[i] = line[i+1];
+	}
+}
+#endif;
 void loadTests(ut_configuration_t *configp,ListNode_t *test_suites_list_headp, const char *command, void func(ListNode_t *test_suites_list_headp, char *line,ut_configuration_t *configp)) {
 	char command_line[2024];
 	snprintf(command_line, sizeof(command_line) -1, command, configp->program_name);
@@ -69,7 +88,12 @@ void loadTests(ut_configuration_t *configp,ListNode_t *test_suites_list_headp, c
 		char line[300];
 		if (0 != fgets(line,299, fd)) {
 			chomp(line);
+#if __CYGWIN__
+			removeLeadingUnderscore (line);
 			func( test_suites_list_headp, line,configp);
+#else
+			func( test_suites_list_headp, line,configp);
+#endif
 		}
 	}
 	pclose(fd);
