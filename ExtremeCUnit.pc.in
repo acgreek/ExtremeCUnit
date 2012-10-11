@@ -1,3 +1,4 @@
+include(pc.m4)
 prefix=/usr
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
@@ -9,5 +10,5 @@ Name: ExtremeCUnit
 Description: ExtremeCUnit unit C/C++ unit test 
 Version: ${version}
 Requires: 
-Libs: -pie -Wl,--rpath,.,--rpath,dist -lExtremeCUnit -ldl 
-Cflags: -DUNIT_TEST -fPIC -pie -rdynamic
+Libs: LIBRARY_FLAGS
+Cflags:  C_FLAGS 
