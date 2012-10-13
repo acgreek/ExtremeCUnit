@@ -5,4 +5,7 @@
 *.so
 test
 obj/
+dist/
 *.gcov
+ExtremeCUnit.pc
+pc.m4

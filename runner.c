@@ -73,7 +73,7 @@ int run_test_in_child_memcheck_and_stack_monitor(execute_context_t * ecp, test_r
 		ecp->sp->destroy.func(ptr);
 	
 	end_mem = mallinfo();
-	if (start_mem.uordblks != end_mem.uordblks) {
+	if (!ecp->configp->disable_memory_test && start_mem.uordblks != end_mem.uordblks) {
 		fprintf(stderr, "%s:%d:0 possible memory leak in test '%s': %u bytes unaccounted for\n",testp->filename, testp->line,testp->test_name, end_mem.uordblks- start_mem.uordblks);
 		return -1;
 	}
@@ -116,9 +116,13 @@ int run_test_forked_in_gdb(execute_context_t * ecp, test_results_t *testp){
 int run_test(execute_context_t * ecp, test_results_t *testp) {
 	int cur_results = 0;
 
-	if (NULL != ecp->configp->gdb_test) {
-		if (0 == strncmp(ecp->configp->gdb_test, testp->test_name, strlen(ecp->configp->gdb_test)))
-			cur_results = 0 == run_test_forked_in_gdb(ecp,testp) ? 0 :1; 
+	if (NULL != ecp->configp->only_test) {
+		if (0 == strncmp(ecp->configp->only_test, testp->test_name, strlen(ecp->configp->only_test)+1)) {
+			if (ecp->configp->run_in_debugger)
+				cur_results = 0 == run_test_forked_in_gdb(ecp,testp) ? 0 :1; 
+			else 
+				cur_results = 0 == run_test_forked(ecp,testp) ? 0 :1; 
+		}
 
 		return cur_results;
 	}

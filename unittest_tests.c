@@ -101,3 +101,8 @@ SUITE_DESTROYV(suite2, local_ptr) {
 	free(local_ptr);
 	return 0;
 }
+#ifdef __CYGWIN__ 
+int main (int argc, char * argv[]){
+	return windows_main(argc, argv);
+}
+#endif
