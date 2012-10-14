@@ -3,7 +3,7 @@
 
 COVERAGE_CFLAGS= -fprofile-arcs -ftest-coverage
 ifeq ($(UNAME), Cygwin)
-CFLAGS=$(CFLAGS_DIST)  $(COVERAGE_CFLAGS) -Wall -ggdb 
+CFLAGS=$(CFLAGS_DIST) $(COVERAGE_CFLAGS) -Wall -ggdb
 else 
 CFLAGS=$(CFLAGS_DIST)  $(COVERAGE_CFLAGS) -Wall -ggdb -fPIC 
 endif
@@ -16,9 +16,12 @@ MAKEDEPEND = gcc -M $(CFLAGS) -o $*.d $<
 OBJ_FILE_NAMES=$(SRC:.c=.o)
 OBJS=$(patsubst %,$(OBJDIR)/%,$(OBJ_FILE_NAMES))
 
+SHARED_LIBRARY=lib$(LIBRARY_NAME).so
+STATIC_LIBRARY=lib$(LIBRARY_NAME).a
 SHARE_LIBRARY_TARGET = $(DISTDIR)/$(SHARED_LIBRARY)
 VERSION=$(MAJOR_VERSION).$(MINOR_VERSION)
 SHARE_LIBRARY_TARGET_VERSION = $(SHARE_LIBRARY_TARGET).$(VERSION)
+STATIC_LIBRARY_TARGET = $(DISTDIR)/$(STATIC_LIBRARY)
 
 INC_FILE_NAMES=$(SRC:.c=.P)
 INCLUDES=$(patsubst %,$(DEPDIR)/%,$(INC_FILE_NAMES))
@@ -43,9 +46,12 @@ ifneq ($(UNAME), Cygwin)
 	ldconfig -l $@
 endif
 
+$(STATIC_LIBRARY_TARGET): $(SHARE_LIBRARY_TARGET_VERSION)
+	ar rcs $@ $(SHARE_LIBRARY_TARGET_VERSION)
+
 $(PKGCONFIG_FILE) : $(PKGCONFIG_FILE).in Makefile-common
 ifeq ($(UNAME), Cygwin)
-	echo "define(LIBRARY_FLAGS,\`-Wl,--export-all-symbols -Wl,--rpath,.,--rpath,dist,--rpath,/usr/lib/ /usr/lib/libExtremeCUnit.so -ldl')" > pc.m4
+	echo "define(LIBRARY_FLAGS,\`-Wl,--export-all-symbols -Wl,--rpath,.,--rpath,dist,--rpath,/usr/lib/ -lExtremeCUnit -ldl')" > pc.m4
 	echo "define(C_FLAGS,\`-DUNIT_TEST -pie ')" >> pc.m4
 else 
 	echo "define(LIBRARY_FLAGS,\`-pie -Wl,--rpath,.,--rpath,dist -lExtremeCUnit -ldl')" > pc.m4
@@ -53,17 +59,18 @@ else
 endif
 	m4 $(PKGCONFIG_FILE).in > $(PKGCONFIG_FILE)
 
-install: $(SHARE_LIBRARY_TARGET_VERSION) $(PKGCONFIG_FILE)
+install: $(SHARE_LIBRARY_TARGET_VERSION) $(STATIC_LIBRARY_TARGET) $(PKGCONFIG_FILE)
 	mkdir -p $(INSTALL_PREFIX)/$(LIBDIR)
 	mkdir -p $(INSTALL_PREFIX)/include	
 	mkdir -p $(INSTALL_PREFIX)/$(LIBDIR)/pkgconfig
-	cp $(SHARE_LIBRARY_TARGET_VERSION) $(INSTALL_PREFIX)/$(LIBDIR)
+	cp $(STATIC_LIBRARY_TARGET) $(INSTALL_PREFIX)/$(LIBDIR)
 	cp $(HEADER_FILE) $(INSTALL_PREFIX)/include
 	cp $(PKGCONFIG_FILE) $(INSTALL_PREFIX)/lib/pkgconfig
 ifneq ($(UNAME), Cygwin)
+	cp $(SHARE_LIBRARY_TARGET_VERSION) $(INSTALL_PREFIX)/$(LIBDIR)
 	ldconfig -l $(INSTALL_PREFIX)/lib/$(SHARED_LIBRARY).$(VERSION)
 endif
-	ln -sf $(INSTALL_PREFIX)/$(LIBDIR)/$(SHARED_LIBRARY).$(VERSION) $(INSTALL_PREFIX)/$(LIBDIR)/$(SHARED_LIBRARY)
+
 
 ifeq ($(UNAME), Cygwin)
 $(DISTDIR)/test: $(UNIT_TEST_SRC) $(SHARE_LIBRARY_TARGET_VERSION)
