@@ -5,6 +5,9 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <sys/types.h>
+#include <errno.h>
+
 
 
 #include <sys/types.h>
@@ -91,9 +94,25 @@ int run_test_forked_h1(execute_context_t * ecp, test_results_t *testp, int secon
 }
 
 int run_test_forked(execute_context_t * ecp, test_results_t *testp){
+	int wait_status;
 	int status;
 	pid_t child_pid = run_test_forked_h1(ecp, testp,0);
-	waitpid(child_pid, &status,0);
+	alarm(10);
+	wait_status = waitpid(child_pid, &status,0);
+	alarm(0);
+	if (wait_status == EINTR) {
+		fprintf(stderr, "%s:%d:0 test '%s' timed out \n",testp->filename, testp->line,testp->test_name);
+		kill(child_pid, SIGTERM);
+		alarm(10);
+		wait_status = waitpid(child_pid, &status,0);
+		alarm(0);
+		if (wait_status == EINTR) {
+			fprintf(stderr, "%s:%d:0 test '%s': even sigterm timed out his is bad\n",testp->filename, testp->line,testp->test_name);
+			kill(child_pid, SIGKILL);
+			wait_status = waitpid(child_pid, &status,0);
+		}
+	} 
+		
 	if (status != 0) 
 		return 1;
 	return 0;
@@ -117,12 +136,14 @@ int run_test(execute_context_t * ecp, test_results_t *testp) {
 	int cur_results = 0;
 
 	if (NULL != ecp->configp->only_test) {
-		if (0 == strncmp(ecp->configp->only_test, testp->test_name, strlen(ecp->configp->only_test)+1))
+		if (0 == (strncmp(ecp->configp->only_test, testp->test_name, strlen(ecp->configp->only_test)+1))) {
 			if (ecp->configp->run_in_debugger)
 				cur_results = 0 == run_test_forked_in_gdb(ecp,testp) ? 0 :1; 
-			else 
+			else  {
 				cur_results = 0 == run_test_forked(ecp,testp) ? 0 :1; 
+			}
 
+		}
 		return cur_results;
 	}
 	cur_results = 0 == run_test_forked(ecp,testp) ? 0 :1; 
@@ -161,10 +182,16 @@ void executeSuite(ListNode_t * nodep, void * datap) {
 	ListApplyAll (&ecp->sp->test_list_head, executeTest,ecp);
 
 }
+
+static void 
+sigalarm(UNUSED int sig) {
+}
+
 int run_tests(ut_configuration_t * configp,  ListNode_t *test_suites_list_headp) {
 	execute_context_t ec;
 	ec.configp = configp;
 	ec.result = 0;
+ 	signal(SIGALRM,sigalarm );
 	ListApplyAll (test_suites_list_headp, executeSuite, &ec);
 	return ec.result;
 }
