@@ -1,4 +1,4 @@
-SHARED_LIBRARY=libExtremeCUnit.so
+LIBRARY_NAME=ExtremeCUnit
 MAJOR_VERSION=0.9
 MINOR_VERSION=0
 SRC=main.c runner.c findtest_names.c assert_support.c

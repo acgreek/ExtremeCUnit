@@ -49,3 +49,24 @@ To read
 
 kernel.yama.ptrace_scope = 0
 
+
+Note to cygwin users
+
+To compile a test app on cygiwin, you will need to add to a the follow 
+
+#ifdef __CYGWIN__ 
+int main (int argc, char * argv[]){
+	return windows_main(argc, argv);
+}
+#endif
+
+
+to one of your test files, for an example see unittest_tests.c. 
+
+if you don't do this, you will probably get and error like the following 
+
+Creating library file: libtest.dll.a/usr/lib/gcc/i686-pc-cygwin/4.5.3/../../../libcygwin.a(libcmain.o): In function `main':
+/usr/src/debug/cygwin-1.7.16-1/winsup/cygwin/lib/libcmain.c:39: undefined reference to `_WinMain@16'
+
+I'm not sure why but gcc on cygwin seem no support linking with main that is in static or shared library, it requires that the main function be directly in the source in a .o file. I must be doing something stupid here, but I don't see the need to waste time trying to figure this out
+

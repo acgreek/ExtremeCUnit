@@ -85,6 +85,7 @@ int ut_assertStatementEqStr(const char * real,const char * expected ,const char 
 int ut_assertStatementOptLong(const long real, const long expect,const int  result, const char *oper, char * filename, int line);
 int ut_assertStatementOptFloat(const float real, const float expect,const int  result, const char *oper, char * filename, int line);
 int ut_assertStatementOptDouble(const double real, const double expect,const int  result, const char *oper, char * filename, int line);
+int windows_main (int argc, char * argv[]);
 #ifdef __cplusplus
 }
 #endif

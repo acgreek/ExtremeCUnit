@@ -79,7 +79,7 @@ void removeLeadingUnderscore (char *line)  {
 		line[i] = line[i+1];
 	}
 }
-#endif;
+#endif
 void loadTests(ut_configuration_t *configp,ListNode_t *test_suites_list_headp, const char *command, void func(ListNode_t *test_suites_list_headp, char *line,ut_configuration_t *configp)) {
 	char command_line[2024];
 	snprintf(command_line, sizeof(command_line) -1, command, configp->program_name);
