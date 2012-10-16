@@ -76,7 +76,7 @@ int run_test_in_child_memcheck_and_stack_monitor(execute_context_t * ecp, test_r
 		ecp->sp->destroy.func(ptr);
 	
 	end_mem = mallinfo();
-	if (!ecp->configp->disable_memory_test && start_mem.uordblks != end_mem.uordblks) {
+	if (ecp->configp->enable_memory_test && start_mem.uordblks != end_mem.uordblks) {
 		fprintf(stderr, "%s:%d:0 possible memory leak in test '%s': %u bytes unaccounted for\n",testp->filename, testp->line,testp->test_name, end_mem.uordblks- start_mem.uordblks);
 		return -1;
 	}

@@ -14,7 +14,7 @@ typedef struct _ut_configuration_t {
 	char stop_after_one_failed_test;
 	char run_forked; 
 	char * run_only_test;
-	int disable_memory_test;
+	int enable_memory_test;
 } ut_configuration_t;
 #define UT_CONFIGURATION_DEFAULT {argv[0], stdout,NULL,0,0,NULL,0,0,0,0}
 #endif

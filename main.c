@@ -22,7 +22,7 @@ void usage(int argc, char * argv[]) {
 	printf("   -p               run performance tests (performance test don't execute by default)\n");
 	printf("Output:\n");	
 	printf("   -v               verbose, normally only failed test are displayed\n");	
-	printf("   -M               disable memory check, use when running through valgrind similar memory checkers\n");	
+	printf("   -M               enabled memory check, it's better to use valgrind because this memory check does not support a suppression yet as valgrind does\n");	
 	
 }
 
@@ -51,7 +51,7 @@ static void readCmdConfig(int argc, char * argv[], ut_configuration_t *configp) 
 				configp->verbose = 1;		
 				break;
 			case 'M':
-				configp->disable_memory_test= 1;
+				configp->enable_memory_test= 1;
 				break;
 			default:
 			case 'h':
