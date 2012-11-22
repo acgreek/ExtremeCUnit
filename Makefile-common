@@ -86,14 +86,14 @@ endif
 
 ifeq ($(UNAME), Cygwin)
 $(DISTDIR)/test: $(UNIT_TEST_SRC) $(SHARE_LIBRARY_TARGET_VERSION)
-	$(CC) -Wl,--export-all-symbols -shared -ldl -pie $(CFLAGS) -Wl,--rpath,.,--rpath,dist -DUNIT_TEST -o $@ $< $(SHARE_LIBRARY_TARGET_VERSION) -ldl  -lstdc++
+	$(CC) -Wl,--export-all-symbols -shared -ldl -pie $(CFLAGS) -Wl,--rpath,.,--rpath,dist -DUNIT_TEST -o $@ unittest_tests.c unittest_cpp_tests.cc SHARE_LIBRARY_TARGET_VERSION) -ldl  -lstdc++
 $(DISTDIR)/test_coverage: $(UNIT_TEST_SRC) $(COVERAGE_OBJS)
-	$(CC) $(COVERAGE_CFLAGS) -Wl,--export-all-symbols -shared -ldl -pie $(CFLAGS) -Wl,--rpath,.,--rpath,dist -DUNIT_TEST -o $@ $< $(COVERAGE_OBJS) -ldl  -lstdc++
+	$(CC) $(COVERAGE_CFLAGS) -Wl,--export-all-symbols -shared -ldl -pie $(CFLAGS) -Wl,--rpath,.,--rpath,dist -DUNIT_TEST -o $@  unittest_tests.c  unittest_cpp_tests.cc $(COVERAGE_OBJS) -ldl  -lstdc++
 else 
 $(DISTDIR)/test: $(UNIT_TEST_SRC) $(SHARE_LIBRARY_TARGET_VERSION)
-	 $(CC) -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,.,--rpath,dist -DUNIT_TEST -o $@ $< $(SHARE_LIBRARY_TARGET_VERSION) -ldl  -lstdc++
+	 $(CC) -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,.,--rpath,dist -DUNIT_TEST -o $@  unittest_tests.c unittest_cpp_tests.cc $(SHARE_LIBRARY_TARGET_VERSION) -ldl  -lstdc++
 $(DISTDIR)/test_coverage: $(UNIT_TEST_SRC) $(COVERAGE_OBJS)
-	 $(CC)  $(COVERAGE_CFLAGS) -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,.,--rpath,dist -DUNIT_TEST -o $@ $< $(COVERAGE_OBJS) -ldl  -lstdc++
+	 $(CC)  $(COVERAGE_CFLAGS) -ldl -pie -rdynamic $(CFLAGS) -Wl,--rpath,.,--rpath,dist -DUNIT_TEST -o $@  unittest_tests.c  unittest_cpp_tests.cc $(COVERAGE_OBJS) -ldl  -lstdc++
 
 endif 
 
