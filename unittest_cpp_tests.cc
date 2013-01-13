@@ -1,3 +1,4 @@
+#define UNIT_TEST
 #include "ExtremeCUnit.h"
 #include <string>
 TEST(chomp_test_remove_cpp) {
