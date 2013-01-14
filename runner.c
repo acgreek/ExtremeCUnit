@@ -85,7 +85,7 @@ int run_test_in_child_memcheck_and_stack_monitor(execute_context_t * ecp, test_r
 int run_test_forked_h1(execute_context_t * ecp, test_results_t *testp, int seconds_to_sleep){
 	pid_t child_pid;
 	if (0 == (child_pid = fork()) ) {
-		int results;
+		int results = -1;
 		sleep(seconds_to_sleep);
 		results =  run_test_in_child_memcheck_and_stack_monitor(ecp, testp);
 		exit(results);
@@ -95,11 +95,12 @@ int run_test_forked_h1(execute_context_t * ecp, test_results_t *testp, int secon
 
 int run_test_forked(execute_context_t * ecp, test_results_t *testp){
 	int wait_status;
-	int status;
+	int status=-1;
 	pid_t child_pid = run_test_forked_h1(ecp, testp,0);
 	alarm(10);
 	wait_status = waitpid(child_pid, &status,0);
 	alarm(0);
+	
 	if (wait_status == EINTR) {
 		fprintf(stderr, "%s:%d:0 test '%s' timed out \n",testp->filename, testp->line,testp->test_name);
 		kill(child_pid, SIGTERM);
@@ -112,6 +113,10 @@ int run_test_forked(execute_context_t * ecp, test_results_t *testp){
 			wait_status = waitpid(child_pid, &status,0);
 		}
 	} 
+
+	if (!WIFEXITED(status)) {
+		fprintf(stderr, "%s:%d:0 test '%s': test terminated unexapectedly\n",testp->filename, testp->line,testp->test_name);
+	}
 		
 	if (status != 0) 
 		return 1;
