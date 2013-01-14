@@ -1,9 +1,12 @@
 cmake_minimum_required (VERSION 0.9.1)
 project (ExtremeCUnit)
 
+cmake_policy(SET CMP0003 NEW)
+
+
 find_package(PkgConfig)
 set(CMAKE_C_FLAGS "-Wall -ggdb3 -fPIC " )
-set(CMAKE_CXX_FLAGS "-std=c++0x " )
+set(CMAKE_CXX_FLAGS "-std=c++0x" )
 
 add_library(ExtremeCUnit SHARED main.c runner.c findtest_names.c assert_support.c)
 set(CMAKE_EXE_LINKER_FLAGS "-pie -rdynamic -ldl -lstdc++")
@@ -20,3 +23,7 @@ add_custom_target(run ./test)
 add_custom_target(runv ./test -v)
 ADD_DEPENDENCIES(run test)
 ADD_DEPENDENCIES(runv test)
+
+install(TARGETS ExtremeCUnit DESTINATION "lib")
+install(FILES ExtremeCUnit.h DESTINATION "include")
+
