@@ -6,7 +6,7 @@ TEST(chomp_test_remove_cpp) {
 	return 0;
 }
 TEST(throw_test) {
-	throw std::string("blue bear");
+	//throw std::string("blue bear");
 	return 0;
 }
 SUITE_SETUP(CPP_suite) {
