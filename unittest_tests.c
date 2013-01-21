@@ -1,3 +1,4 @@
+#define UNIT_TEST
 #include "ExtremeCUnit.h"
 #include <stdio.h>
 TEST(test_1) {

@@ -3,9 +3,23 @@
 *.gcno
 .dep/
 *.so
-test
 obj/
 dist/
 *.gcov
 ExtremeCUnit.pc
 pc.m4
+
+#my temp file
+dump
+
+#build target 
+libExtremeCUnit.a
+test
+
+#CMake
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
+

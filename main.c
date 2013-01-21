@@ -64,14 +64,14 @@ static void readCmdConfig(int argc, char * argv[], ut_configuration_t *configp) 
 
 #include <string.h>
 test_suite_element_t * create_test_suite_element(char * suite_name) {
-	test_suite_element_t * e = malloc(sizeof(test_suite_element_t));
+	test_suite_element_t * e =  (test_suite_element_t *) malloc(sizeof(test_suite_element_t));
 	memset(e, '\0', sizeof(test_suite_element_t));
 	e->suite.suite_name = suite_name;
 	ListInitialize(&e->test_list_head);
 	return e;
 }
 test_element_t * create_test_element(test_results_t * testp) {
-	test_element_t * e = malloc(sizeof(test_element_t));
+	test_element_t * e =  (test_element_t *)malloc(sizeof(test_element_t));
 	memcpy(&e->test, testp, sizeof(test_results_t));
 	return e;
 }

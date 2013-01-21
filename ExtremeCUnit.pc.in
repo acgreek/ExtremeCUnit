@@ -3,12 +3,11 @@ prefix=/usr
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
-major_version=1
-version=1.0.0
+major_version=@VERSION_MAJOR@
+version=@VERSION_MAJOR@.@VERSION_MINOR@
 
 Name: ExtremeCUnit
 Description: ExtremeCUnit unit C/C++ unit test 
-Version: ${version}
 Requires: 
-Libs: LIBRARY_FLAGS
-Cflags:  C_FLAGS 
+Libs: @PC_LIBRARY_FLAGS@
+Cflags:  @PC_C_FLAGS@
