@@ -1,8 +1,10 @@
-cmake_minimum_required (VERSION 0.9.1)
+cmake_minimum_required (VERSION 2.8.4)
 project (ExtremeCUnit)
 
 cmake_policy(SET CMP0003 NEW)
 
+set (VERSION_MAJOR 0)
+set (VERSION_MINOR 9.1)
 
 find_package(PkgConfig)
 set(CMAKE_C_FLAGS "-Wall -ggdb3 -fPIC " )
@@ -15,7 +17,19 @@ IF(CYGWIN)
 	set(CMAKE_C_FLAGS "-Wl,--export-all-symbols ${CMAKE_C_FLAGS}" )
 	set(CMAKE_CXX_FLAGS "-Wl,--export-all-symbols ${CMAKE_CXX_FLAGS}" )
 	set(CMAKE_CXX_LINK_FLAGS "-Wl,--export-all-symbols ${CMAKE_CXX_LINK_FLAG}" )
-ENDIF(${CYGWIN} MATCHES "TRUE")
+
+	set (PC_LIBRARY_FLAGS "-Wl,--export-all-symbols -Wl,--rpath,.,--rpath,dist,--rpath,/usr/lib/ -lExtremeCUnit -ldl")
+	set (PC_C_FLAGS "-DUNIT_TEST -pie ")
+ELSE()
+	set (PC_LIBRARY_FLAGS "-pie -Wl,--rpath,.,--rpath,dist -lExtremeCUnit -ldl" )
+	set (PC_C_FLAGS "-DUNIT_TEST -fPIC -pie -rdynamic" )
+ENDIF(CYGWIN)
+
+
+configure_file (
+	"${PROJECT_SOURCE_DIR}/ExtremeCUnit.pc.in"
+   "${PROJECT_BINARY_DIR}/ExtremeCUnit.pc"
+)
 
 set(CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_C_COMPILER>  <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>  -o <TARGET> <LINK_LIBRARIES>")
 
@@ -32,4 +46,5 @@ ADD_DEPENDENCIES(runv test)
 
 install(TARGETS ExtremeCUnit DESTINATION "lib")
 install(FILES ExtremeCUnit.h DESTINATION "include")
+install(FILES ExtremeCUnit.pc DESTINATION "lib/pkgconfig")
 
