@@ -11,6 +11,12 @@ set(CMAKE_CXX_FLAGS "-std=c++0x" )
 add_library(ExtremeCUnit SHARED main.c runner.c findtest_names.c assert_support.c)
 set(CMAKE_EXE_LINKER_FLAGS "-pie -rdynamic -ldl -lstdc++")
 
+IF(CYGWIN)
+	set(CMAKE_C_FLAGS "-Wl,--export-all-symbols ${CMAKE_C_FLAGS}" )
+	set(CMAKE_CXX_FLAGS "-Wl,--export-all-symbols ${CMAKE_CXX_FLAGS}" )
+	set(CMAKE_CXX_LINK_FLAGS "-Wl,--export-all-symbols ${CMAKE_CXX_LINK_FLAG}" )
+ENDIF(${CYGWIN} MATCHES "TRUE")
+
 set(CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_C_COMPILER>  <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>  -o <TARGET> <LINK_LIBRARIES>")
 
 add_executable(test unittest_tests.c unittest_cpp_tests.cc ) 
