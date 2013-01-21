@@ -7,11 +7,10 @@ set (VERSION_MAJOR 0)
 set (VERSION_MINOR 9.1)
 
 find_package(PkgConfig)
-set(CMAKE_C_FLAGS "-Wall -ggdb3 -fPIC " )
+set(CMAKE_C_FLAGS "-Wall -ggdb3" )
 set(CMAKE_CXX_FLAGS "-std=c++0x" )
 
 add_library(ExtremeCUnit SHARED main.c runner.c findtest_names.c assert_support.c)
-set(CMAKE_EXE_LINKER_FLAGS "-pie -rdynamic -ldl -lstdc++")
 
 IF(CYGWIN)
 	set(CMAKE_C_FLAGS "-Wl,--export-all-symbols ${CMAKE_C_FLAGS}" )
@@ -20,7 +19,10 @@ IF(CYGWIN)
 
 	set (PC_LIBRARY_FLAGS "-Wl,--export-all-symbols -Wl,--rpath,.,--rpath,dist,--rpath,/usr/lib/ -lExtremeCUnit -ldl")
 	set (PC_C_FLAGS "-DUNIT_TEST -pie ")
+	set(CMAKE_EXE_LINKER_FLAGS "-pie -ldl -lstdc++")
 ELSE()
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC " )
+	set(CMAKE_EXE_LINKER_FLAGS "-pie -rdynamic -ldl -lstdc++")
 	set (PC_LIBRARY_FLAGS "-pie -Wl,--rpath,.,--rpath,dist -lExtremeCUnit -ldl" )
 	set (PC_C_FLAGS "-DUNIT_TEST -fPIC -pie -rdynamic" )
 ENDIF(CYGWIN)
