@@ -6,8 +6,18 @@ TEST(chomp_test_remove_cpp) {
 	Assert(0 == str.compare(str));
 	return 0;
 }
+static void foo () {
+	throw "bla";
+}
 TEST(throw_test) {
-	//throw std::string("blue bear");
+	bool exception_thrown= false;
+	try {
+		foo();
+	}
+	catch (...) {
+		exception_thrown=true;
+	}
+	Assert(true == exception_thrown );
 	return 0;
 }
 SUITE_SETUP(CPP_suite) {
