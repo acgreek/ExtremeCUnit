@@ -1,3 +1,4 @@
+// vim: ts=2 noet spell foldmethod=syntax :
 #include "ut_config.h"
 
 #include <stdio.h>
@@ -11,7 +12,7 @@
 #define COMMAND "nm %s |grep UnitTest_a_test_to_run_|cut -d' ' -f 3|grep -E \"^_UnitTest_a_test_to_run_\""
 #define SETUP "nm %s |grep UnitTest_a_unit_test_suite_setup_func_|cut -d' ' -f 3|grep -E \"^_UnitTest_a_unit_test_suite_setup_func_\""
 #define DESTORY "nm %s |grep UnitTest_a_unit_test_suite_destroy_func_|cut -d' ' -f 3|grep -E \"^_UnitTest_a_unit_test_suite_destroy_\""
-#else 
+#else
 #define COMMAND "nm %s |grep UnitTest_a_test_to_run_|cut -d' ' -f 3|grep -E \"^UnitTest_a_test_to_run_\""
 #define SETUP "nm %s |grep UnitTest_a_unit_test_suite_setup_func_|cut -d' ' -f 3|grep -E \"^UnitTest_a_unit_test_suite_setup_func_\""
 #define DESTORY "nm %s |grep UnitTest_a_unit_test_suite_destroy_func_|cut -d' ' -f 3|grep -E \"^UnitTest_a_unit_test_suite_destroy_\""
@@ -83,7 +84,7 @@ void removeLeadingUnderscore (char *line)  {
 void loadTests(ut_configuration_t *configp,ListNode_t *test_suites_list_headp, const char *command, void func(ListNode_t *test_suites_list_headp, char *line,ut_configuration_t *configp)) {
 	char command_line[2024];
 	snprintf(command_line, sizeof(command_line) -1, command, configp->program_name);
-	FILE * fd = popen (command_line, "r"); 
+	FILE * fd = popen (command_line, "r");
 	while (!feof(fd)) {
 		char line[300];
 		if (0 != fgets(line,299, fd)) {

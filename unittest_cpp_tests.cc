@@ -1,6 +1,8 @@
+// vim: set sw=4 ts=4 sts=4 noet tw=78  foldlevel=0 foldmethod=syntax spell:
 #define UNIT_TEST
 #include "ExtremeCUnit.h"
 #include <string>
+
 TEST(chomp_test_remove_cpp) {
 	std::string str= "a\n";
 	Assert(0 == str.compare(str));

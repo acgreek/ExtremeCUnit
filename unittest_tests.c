@@ -1,6 +1,10 @@
+// vim: set sw=4 ts=4 sts=4 noet tw=78  foldlevel=0 foldmethod=syntax spell:
 #define UNIT_TEST
 #include "ExtremeCUnit.h"
 #include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include <stdlib.h>
 TEST(test_1) {
 	Assert(1==1);
 	return 0;
@@ -10,7 +14,6 @@ TEST(test_2) {
 	return 0;
 }
 void chomp(char * str);
-#include <string.h>
 TEST(chomp_test_remove) {
 	char foo[200] = "a\n";
 	chomp(foo);
@@ -42,7 +45,6 @@ TEST(int_test_opt_should_not_call_twice) {
 	AssertOptFloat(++ll, ==, 2);
 	return 0;
 }
-#include <time.h>
 TEST(ctime_should_not_leak) {
 	time_t now = time(NULL);
 	char foo[100];
@@ -50,13 +52,12 @@ TEST(ctime_should_not_leak) {
 	return 0;
 
 }
-#include <stdlib.h>
 TEST(string_test) {
 	AssertEqStr("bla" "bla", "blabla");
 	AssertEqStr(NULL, NULL);
 	/*
 	char *c = (char *) malloc(10);
-	
+
 	free(c);
 	int i;
 	for (i=0;i<900000; i++)
@@ -84,12 +85,10 @@ SUITE_TEST(suite1,test2) {
 	AssertEqStr(g_foop, "blab");
 	return 0;
 }
-
 SUITE_DESTROY(suite1) {
-	free(g_foop); 
+	free(g_foop);
 	return 0;
 }
-
 SUITE_SETUP(suite2) {
 	return  strdup("blab");
 }
@@ -97,12 +96,11 @@ SUITE_TEST_V(suite2,test2, local_ptr) {
 	AssertEqStr((char *)local_ptr, "blab");
 	return 0;
 }
-
 SUITE_DESTROYV(suite2, local_ptr) {
 	free(local_ptr);
 	return 0;
 }
-#ifdef __CYGWIN__ 
+#ifdef __CYGWIN__
 int main (int argc, char * argv[]){
 	return windows_main(argc, argv);
 }
