@@ -17,7 +17,7 @@ IF(CYGWIN)
 	set(CMAKE_CXX_FLAGS "-Wl,--export-all-symbols ${CMAKE_CXX_FLAGS}" )
 	set(CMAKE_CXX_LINK_FLAGS "-Wl,--export-all-symbols ${CMAKE_CXX_LINK_FLAG}" )
 
-	set (PC_LIBRARY_FLAGS "-Wl,--export-all-symbols -Wl,--rpath,.,--rpath,dist,--rpath,/usr/lib/ -lExtremeCUnit -ldl")
+	set (PC_LIBRARY_FLAGS "-Wl,--export-all-symbols -Wl,--rpath,.,--rpath,dist,--rpath,${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_INSTALL_PREFIX}/lib/libExtremeCUnit.dll.a -ldl ")
 	set (PC_C_FLAGS "-DUNIT_TEST -pie ")
 	set(CMAKE_EXE_LINKER_FLAGS "-pie -ldl -lstdc++")
 ELSE()

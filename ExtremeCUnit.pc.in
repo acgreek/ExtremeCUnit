@@ -1,12 +1,13 @@
 include(pc.m4)
-prefix=/usr
-exec_prefix=${prefix}
-libdir=${exec_prefix}/lib
-includedir=${prefix}/include
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=@CMAKE_INSTALL_PREFIX@
+libdir=@CMAKE_INSTALL_PREFIX@/lib
+includedir=@CMAKE_INSTALL_PREFIX@/include
 major_version=@VERSION_MAJOR@
-version=@VERSION_MAJOR@.@VERSION_MINOR@
 
-Name: ExtremeCUnit
+
+Version: @VERSION_MAJOR@.@VERSION_MINOR@
+Name: ExtremeCUnit1
 Description: ExtremeCUnit unit C/C++ unit test 
 Requires: 
 Libs: @PC_LIBRARY_FLAGS@
