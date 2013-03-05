@@ -8,18 +8,14 @@
 #include <string.h>
 #include <sys/types.h>
 #include <errno.h>
-
-
-
 #include <sys/types.h>
 #include <signal.h>
+#include <malloc.h>
+#include <time.h>
 
 #define UNIT_TEST
 #include "suite_and_test_list_wrapper.h"
 #undef UNIT_TEST
-
-#include <malloc.h>
-#include <time.h>
 
 static test_results_t * g_running_test = NULL;
 
