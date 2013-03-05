@@ -87,11 +87,10 @@ int run_test_forked_h1(execute_context_t * ecp, test_results_t *testp, int secon
 	return child_pid;
 }
 int run_test_forked(execute_context_t * ecp, test_results_t *testp){
-	int wait_status;
-	int status=-1;
 	pid_t child_pid = run_test_forked_h1(ecp, testp,0);
 	alarm(10);
-	wait_status = waitpid(child_pid, &status,0);
+	int status=-1;
+	int wait_status = waitpid(child_pid, &status,0);
 	alarm(0);
 
 	if (wait_status == EINTR) {
@@ -106,14 +105,11 @@ int run_test_forked(execute_context_t * ecp, test_results_t *testp){
 			wait_status = waitpid(child_pid, &status,0);
 		}
 	}
-
 	if (!WIFEXITED(status)) {
-		fprintf(stderr, "%s:%d:0 test '%s': test terminated unexapectedly\n",testp->filename, testp->line,testp->test_name);
+		fprintf(stderr, "%s:%d:0 test '%s': test terminated unexpectedly\n",testp->filename, testp->line,testp->test_name);
 	}
 
-	if (status != 0)
-		return 1;
-	return 0;
+	return (status != 0) ? 1 : 0;
 }
 int run_test_forked_in_gdb(execute_context_t * ecp, test_results_t *testp){
 	int status;
