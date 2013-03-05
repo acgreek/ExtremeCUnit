@@ -10,7 +10,7 @@ find_package(PkgConfig)
 set(CMAKE_C_FLAGS "-Wall -ggdb3" )
 set(CMAKE_CXX_FLAGS "-std=c++0x" )
 
-add_library(ExtremeCUnit SHARED main.c runner.c findtest_names.c assert_support.c)
+add_library(ExtremeCUnit SHARED main.c runner.c util.c findtest_names.c assert_support.c)
 
 IF(CYGWIN)
 	set(CMAKE_C_FLAGS "-Wl,--export-all-symbols ${CMAKE_C_FLAGS}" )

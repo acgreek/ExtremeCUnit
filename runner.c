@@ -12,7 +12,9 @@
 #include <signal.h>
 #include <malloc.h>
 #include <time.h>
+#include <stdlib.h>
 
+#include "util.h"
 #define UNIT_TEST
 #include "suite_and_test_list_wrapper.h"
 #undef UNIT_TEST
@@ -86,14 +88,6 @@ int run_test_forked_h1(execute_context_t * ecp, test_results_t *testp, int secon
 	}
 	return child_pid;
 }
-/** same as getenv, but returns the default if the env var is not defined or empty
- */
-static const char * getenvd(const char *name, const char *default_str) {
-		har * result = getenv(name);
-		if (NULL == result || '\0'== result)
-				return default_str;
-		return result;
-}
 int run_test_forked(execute_context_t * ecp, test_results_t *testp){
 	pid_t child_pid = run_test_forked_h1(ecp, testp,0);
 	alarm(10);
@@ -103,7 +97,7 @@ int run_test_forked(execute_context_t * ecp, test_results_t *testp){
 
 	if (wait_status == EINTR) {
 		fprintf(stderr, "%s:%d:0 test '%s' timed out \n",testp->filename, testp->line,testp->test_name);
-		ill(child_pid, SIGTERM);
+		kill(child_pid, SIGTERM);
 		alarm(10);
 		wait_status = waitpid(child_pid, &status,0);
 		alarm(0);
