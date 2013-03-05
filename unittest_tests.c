@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
+#include <stdlib.h>
 TEST(test_1) {
 	Assert(1==1);
 	return 0;
@@ -49,6 +50,11 @@ TEST(ctime_should_not_leak) {
 	time_t now = time(NULL);
 	char foo[100];
 	snprintf(foo, sizeof(foo)-1, "foo %s\n", ctime(&now));
+	return 0;
+
+}
+TEST(abort) {
+	//abort();
 	return 0;
 
 }
