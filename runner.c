@@ -46,7 +46,7 @@ void segv_handler(int sig) {
 	exit(-1);
 
 }
-int run_test_in_child_stack_monitor(execute_context_t * ecp, test_results_t *testp, UNUSED void * ptr){
+int run_test_in_child_stack_monitor(test_results_t *testp, UNUSED void * ptr){
 	g_running_test= testp;
 	signal(SIGSEGV, segv_handler);
 	int results = 0 == testp->func(ptr) ? 0 : 1;
@@ -67,7 +67,7 @@ int run_test_in_child_memcheck_and_stack_monitor(execute_context_t * ecp, test_r
 	int results=0;
 	if (NULL!= ecp->sp->setup.func)
 		ptr=ecp->sp->setup.func(NULL);
-	results =  run_test_in_child_stack_monitor(ecp, testp, ptr);
+	results =  run_test_in_child_stack_monitor(testp, ptr);
 	if (NULL!= ecp->sp->destroy.func)
 		ecp->sp->destroy.func(ptr);
 

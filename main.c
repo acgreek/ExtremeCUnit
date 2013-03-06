@@ -11,7 +11,7 @@
 char * getUnitTestListAsString(ut_configuration_t *configp,ListNode_t *test_suites_list_headp);
 int run_tests(ut_configuration_t * configp, ListNode_t *test_suites_list_headp);
 
-void usage(int argc, char * argv[]) {
+void usage(UNUSED int argc, char * argv[]) {
 	printf("Usage: %s [OPTION]...\n\n", argv[0]);
 	printf("Debugging:\n");
 	printf("   -o TEST_NAME     skip all tests except TEST_NAME\n");
