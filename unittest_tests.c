@@ -58,6 +58,15 @@ TEST(abort) {
 	return 0;
 
 }
+void * g_var;
+void atexit_function() {
+	free(g_var);
+}
+TEST(atexit) {
+	g_var = malloc(10);
+	atexit( atexit_function);
+	return 0;
+}
 TEST(string_test) {
 	AssertEqStr("bla" "bla", "blabla");
 	AssertEqStr(NULL, NULL);

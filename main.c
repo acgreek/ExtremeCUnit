@@ -87,11 +87,15 @@ static void freeSuite(ListNode_t * nodep, UNUSED void * datap) {
 	free(e);
 }
 
+/**
+ * Cygwin needs some hackyness
+ */
 #ifdef __CYGWIN__
-int windows_main (int argc, char * argv[]) {
+int windows_main (int argc, char * argv[])
 #else
-int main (int argc, char * argv[]) {
+int main (int argc, char * argv[])
 #endif
+{
 	ut_configuration_t config = UT_CONFIGURATION_DEFAULT;
 	int result = 0;
 

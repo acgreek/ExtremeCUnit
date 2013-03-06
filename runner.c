@@ -58,11 +58,23 @@ static void call_std_leaky_func() {
 	snprintf(foo, sizeof(foo)-1, "foo %s\n", ctime(&now));
 
 }
+//Yuh, globals need to remove
+static test_results_t *g_testp;
+static struct mallinfo start_mem, end_mem;
+static void test_mem_atexit() {
+	end_mem = mallinfo();
+	if (start_mem.uordblks != end_mem.uordblks) {
+		fprintf(stderr, "%s:%d:0 possible memory leak in test '%s': %u bytes unaccounted for\n",g_testp->filename, g_testp->line,g_testp->test_name, end_mem.uordblks- start_mem.uordblks);
+		_exit(-1);
+	}
+}
+
 int run_test_in_child_memcheck_and_stack_monitor(execute_context_t * ecp, test_results_t *testp){
-	struct mallinfo start_mem, end_mem;
 	call_std_leaky_func();
 	start_mem= mallinfo();
-
+	g_testp = testp;
+	if (ecp->configp->enable_memory_test)
+			atexit(test_mem_atexit); // this will be called last on linux because these are called in reverse order of registration, and this is the first registration
 	void *ptr;
 	int results=0;
 	if (NULL!= ecp->sp->setup.func)
@@ -71,11 +83,6 @@ int run_test_in_child_memcheck_and_stack_monitor(execute_context_t * ecp, test_r
 	if (NULL!= ecp->sp->destroy.func)
 		ecp->sp->destroy.func(ptr);
 
-	end_mem = mallinfo();
-	if (ecp->configp->enable_memory_test && start_mem.uordblks != end_mem.uordblks) {
-		fprintf(stderr, "%s:%d:0 possible memory leak in test '%s': %u bytes unaccounted for\n",testp->filename, testp->line,testp->test_name, end_mem.uordblks- start_mem.uordblks);
-		return -1;
-	}
 	return results;
 }
 int run_test_forked_h1(execute_context_t * ecp, test_results_t *testp, int seconds_to_sleep){
