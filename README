@@ -1,24 +1,25 @@
-Why another unit test framework? Honestly, I haven't tried all free unit test frameworks out there but I have used a few over the years. Everyone I used was had some trivial issue I felt need more work. I could have just contributed to one of the existing opensourced projects but give that my ideal frame work is fairly minimalist I decided to write my own.
+Why another unit test framework? Honestly, I haven't tried all free unit test frameworks out there but I have used a few over the years. Everyone I've used had some trivial issue I felt need more work. I could have just contributed to one of the existing opensourced projects but given that my ideal framework is fairly minimalist I decided to write my own.
 
 Features:
--integration with vim's gcc error handling. If you setup 'make' to run your tests from with in vim (for example via ':make test' or something like that) the unit test error messages are in the proper format that vim knows how to such when vim return from running 'make' the curser is set to the line where the first error occurred and you can use ':cn' to move the curser to next error.
+-integration with vim's gcc error handling. If you setup 'make' to run your tests from within vim (for example via ':make test' or something like that) the unit test error messages are in the proper format that when vim return from running 'make' the curser is set to the line where the first error occurred and you can use ':cn' to move the curser to next error.
 -Suites and fixtures supported.
--tests do no need to be manually called from in some main function, the test function only needs to written properly and it will automatically execute 
+-tests do no need to be manually called from in some main function, the test function only needs to be written properly and it will automatically execute 
 -tests run in forked subprocess
--memory leaks are detected, though currently only the entire test to reported is reported as leaking, the actual line where the memory was allocated is not intentified.
--when '-G' command line arg is used, any test that fails will be re-started in a gdb at the start of the test fuction.
+-when '-G' command line arg is used, any test that fails will be re-started in a $GDB env variable (gdb if no set) at the start of the test function.
 -minimalist output. By default, if all tests pass, no output is displayed. There is an argument to get a test report.
--By default, performance tests are not run because often they are slow. All unit test should not take a lot of execution time.
+-By default, performance tests are not run because often they are slow. All unit tests should not take a lot of execution time.
 
 
 to install, execute:
+- cmake .
 - make runv
 - # the library should build and all tests should pass 
-- sudo make install # this will install the library and header files off the /usr prefix
+- sudo 'make install' # this will install the library and header files off the /usr/local prefix
 
 to build your unit test binary, add the follow to your CFLAGS and/or CXXFLAGS: `pkg-config ExtremeCUnit --cflags`
 and add to your LDFLAGS: `pkg-config ExtremeCUnit --libs`
 
+this might fail because your pkg-config doesn't know to look in /usr/local/lib/pkgconfig. Try setting in your env PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 
 
 you can write your unit tests in a separate file or include them in same files as the rest of your source code. You can encapsolate code you don't want include in the release binary via 
@@ -41,7 +42,7 @@ needs to be to 0. You can use the following command to set.
 
 echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 
-this setting will go away after the system restarts. To make prem. edit /etc/sysctl.d/10-ptrace.conf and change the line:
+this setting will go away after the system restarts. To make it remain after system restart, edit /etc/sysctl.d/10-ptrace.conf and change the line:
 
 kernel.yama.ptrace_scope = 1
 
@@ -52,7 +53,7 @@ kernel.yama.ptrace_scope = 0
 
 Note to cygwin users
 
-To compile a test app on cygiwin, you will need to add to a the follow 
+To compile a test app on cygiwin, you will need to add the following 
 
 #ifdef __CYGWIN__ 
 int main (int argc, char * argv[]){
@@ -61,12 +62,12 @@ int main (int argc, char * argv[]){
 #endif
 
 
-to one of your test files, for an example see unittest_tests.c. 
+to one of your test files. For an example see unittest_tests.c. 
 
 if you don't do this, you will probably get and error like the following 
 
 Creating library file: libtest.dll.a/usr/lib/gcc/i686-pc-cygwin/4.5.3/../../../libcygwin.a(libcmain.o): In function `main':
 /usr/src/debug/cygwin-1.7.16-1/winsup/cygwin/lib/libcmain.c:39: undefined reference to `_WinMain@16'
 
-I'm not sure why but gcc on cygwin seem no support linking with main that is in static or shared library, it requires that the main function be directly in the source in a .o file. I must be doing something stupid here, but I don't see the need to waste time trying to figure this out
+I'm not sure why, gcc on cygwin seems to not support linking with main that is in static or shared library, it requires that the main function be directly in the source in a .o file. I must be doing something stupid here, but I don't see the need to waste time trying to figure this out right now
 
