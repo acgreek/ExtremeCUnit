@@ -1,0 +1,3 @@
+- output plug-ins, output test report in xml, etc.
+- threaded test execution to speedup
+
