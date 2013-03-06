@@ -7,7 +7,6 @@
 #include "suite_and_test_list_wrapper.h"
 #undef UNIT_TEST
 
-
 #include <string.h>
 
 char * getUnitTestListAsString(ut_configuration_t *configp,ListNode_t *test_suites_list_headp);
