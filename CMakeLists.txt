@@ -4,13 +4,13 @@ project (ExtremeCUnit)
 cmake_policy(SET CMP0003 NEW)
 
 set (VERSION_MAJOR 0)
-set (VERSION_MINOR 9.1)
+set (VERSION_MINOR 9.2)
 
 find_package(PkgConfig)
 set(CMAKE_C_FLAGS "-Wall -Wextra -ggdb3" )
 set(CMAKE_CXX_FLAGS "-std=c++0x" )
-
 add_library(ExtremeCUnit SHARED main.c runner.c util.c findtest_names.c assert_support.c)
+target_link_libraries(ExtremeCUnit dl)
 
 IF(CYGWIN)
 	set(CMAKE_C_FLAGS "-Wl,--export-all-symbols ${CMAKE_C_FLAGS}" )
