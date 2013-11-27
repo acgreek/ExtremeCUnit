@@ -168,8 +168,9 @@ void executeTest(ListNode_t * nodep, void * datap) {
 		}
 		return ;
 	}
-	ecp->result += run_test(ecp, &sp->test) ;
-	if (ecp->result > 0 && ecp->configp->stop_after_one_failed_test)
+	int  current_failure=0;
+	ecp->result +=current_failure=  run_test(ecp, &sp->test) ;
+	if (current_failure > 0 && ecp->configp->stop_after_one_failed_test)
 		exit(-1);
 }
 void executeSuite(ListNode_t * nodep, void * datap) {
