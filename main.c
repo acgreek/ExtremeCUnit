@@ -38,7 +38,7 @@ static void readCmdConfig(int argc, char * argv[], ut_configuration_t *configp) 
 				configp->run_in_debugger = 1;
 				configp->only_test = optarg;
 				break;
-			case '1':
+			case 'l':
 				configp->stop_after_one_failed_test= 1;
 				break;
 
