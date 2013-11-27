@@ -18,7 +18,7 @@ void usage(UNUSED int argc, char * argv[]) {
 	printf("   -o TEST_NAME     skip all tests except TEST_NAME\n");
 	printf("   -g TEST_NAME     skip all tests except TEST_NAME and start TEST_NAME in debugger\n");
 	printf("   -G               if any test fails, rerun it with debugger\n");
-	printf("   -l               stop after one failed test\n");
+	printf("   -1               stop after one failed test\n");
 	printf("   -p               run performance tests (performance test don't execute by default)\n");
 	printf("Output:\n");
 	printf("   -v               verbose, normally only failed test are displayed\n");
@@ -38,7 +38,7 @@ static void readCmdConfig(int argc, char * argv[], ut_configuration_t *configp) 
 				configp->run_in_debugger = 1;
 				configp->only_test = optarg;
 				break;
-			case 'l':
+			case '1':
 				configp->stop_after_one_failed_test= 1;
 				break;
 
