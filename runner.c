@@ -26,6 +26,8 @@ typedef struct _execute_context_t{
 	test_suite_t *suitep;
 	test_suite_element_t *sp;
 	int result;
+	void *ptr;
+	void (*cleanExit)(void *);
 }execute_context_t;
 char * create_tempfile(char * filename,const  char * suite_name, const  char * test_name){
 	int ofid= mkstemp(filename);
@@ -91,6 +93,7 @@ int run_test_forked_h1(execute_context_t * ecp, test_results_t *testp, int secon
 		int results = -1;
 		sleep(seconds_to_sleep);
 		results =  run_test_in_child_memcheck_and_stack_monitor(ecp, testp);
+		ecp->cleanExit(ecp->ptr);
 		exit(results);
 	}
 	return child_pid;
@@ -185,10 +188,12 @@ void executeSuite(ListNode_t * nodep, void * datap) {
 }
 static void sigalarm(UNUSED int sig) {
 }
-int run_tests(ut_configuration_t * configp,  ListNode_t *test_suites_list_headp) {
+int run_tests(ut_configuration_t * configp,  ListNode_t *test_suites_list_headp, void *ptr, void cleanExit(void *)) {
 	execute_context_t ec;
 	ec.configp = configp;
 	ec.result = 0;
+	ec.ptr = ptr;
+	ec.cleanExit = cleanExit;
  	signal(SIGALRM,sigalarm );
 	ListApplyAll (test_suites_list_headp, executeSuite, &ec);
 	return ec.result;

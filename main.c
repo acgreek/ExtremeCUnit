@@ -1,4 +1,4 @@
-// vim: set sw=4 ts=4 sts=4 noet tw=78  foldlevel=0 foldmethod=syntax spell:
+// vim: set sw=4 ts=4 sts=4 noet tw=78  foldlevel=220 foldmethod=syntax spell:
 #include <stdio.h>
 #include <dlfcn.h>
 #include <unistd.h>
@@ -10,7 +10,7 @@
 #include <string.h>
 
 char * getUnitTestListAsString(ut_configuration_t *configp,ListNode_t *test_suites_list_headp);
-int run_tests(ut_configuration_t * configp, ListNode_t *test_suites_list_headp);
+int run_tests(ut_configuration_t * configp, ListNode_t *test_suites_list_headp, void *ptr, void cleanExit(void *));
 
 void usage(UNUSED int argc, char * argv[]) {
 	printf("Usage: %s [OPTION]...\n\n", argv[0]);
@@ -87,6 +87,17 @@ static void freeSuite(ListNode_t * nodep, UNUSED void * datap) {
 	free(e);
 }
 
+typedef struct _FreeFork {
+	ListNode_t * l;
+	ut_configuration_t *configp;
+}FreeFork;
+void exitClean (void * ptr ) {
+	FreeFork * f = (FreeFork *)ptr;
+	ListApplyAll(f->l,freeSuite,  NULL);
+	dlclose(f->configp->dynlibraryp);
+	f->configp->dynlibraryp=NULL;
+}
+
 /**
  * Cygwin needs some hackyness
  */
@@ -116,10 +127,12 @@ int main (int argc, char * argv[])
 		printf("%s\n", dlerror());
 		return(-1);
 	}
-	getUnitTestListAsString(&config, &test_suites_list_head); result = run_tests(&config, &test_suites_list_head);
+	getUnitTestListAsString(&config, &test_suites_list_head);
+	FreeFork f = {&test_suites_list_head, &config};
+	result = run_tests(&config, &test_suites_list_head, &f,exitClean );
 	if (config.verbose) printf("final results: %s\n",0 == result ? "SUCCESS": "FAILED");
-	ListApplyAll(&test_suites_list_head,freeSuite,  NULL);
 
+	ListApplyAll(&test_suites_list_head,freeSuite,  NULL);
 	dlclose(config.dynlibraryp);
 	config.dynlibraryp=NULL;
 	return result;
