@@ -24,7 +24,7 @@ ELSE()
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC " )
 	set(CMAKE_EXE_LINKER_FLAGS "-pie -rdynamic -ldl -lstdc++")
 	set (PC_LIBRARY_FLAGS "-pie -Wl,--rpath,.,--rpath,dist -lExtremeCUnit -ldl" )
-	set (PC_C_FLAGS "-DUNIT_TEST -fPIC -pie -rdynamic" )
+	set (PC_C_FLAGS "-DUNIT_TEST -fPIC -pie -rdynamic -lExtremeCUnit" )
 ENDIF(CYGWIN)
 
 
