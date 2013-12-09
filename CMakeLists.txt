@@ -7,8 +7,8 @@ set (VERSION_MAJOR 0)
 set (VERSION_MINOR 9.2)
 
 find_package(PkgConfig)
-set(CMAKE_C_FLAGS "-Wall -Wextra -ggdb3" )
-set(CMAKE_CXX_FLAGS "-std=c++0x" )
+set(CMAKE_C_FLAGS "-Wall -Wextra -ggdb3 -fPIC" )
+set(CMAKE_CXX_FLAGS "-std=c++0x -fPIC" )
 add_library(ExtremeCUnit SHARED main.c runner.c util.c findtest_names.c assert_support.c)
 target_link_libraries(ExtremeCUnit dl)
 
