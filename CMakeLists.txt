@@ -6,7 +6,9 @@ cmake_policy(SET CMP0003 NEW)
 set (VERSION_MAJOR 0)
 set (VERSION_MINOR 9.2)
 
+find_program(PKG_CONFIG pkg-config)
 find_package(PkgConfig)
+include(CPack)
 set(CMAKE_C_FLAGS "-Wall -Wextra -ggdb3 -fPIC" )
 set(CMAKE_CXX_FLAGS "-std=c++0x -fPIC" )
 add_library(ExtremeCUnit SHARED main.c runner.c util.c findtest_names.c assert_support.c)
@@ -30,7 +32,7 @@ ENDIF(CYGWIN)
 
 configure_file (
 	"${PROJECT_SOURCE_DIR}/ExtremeCUnit.pc.in"
-   "${PROJECT_BINARY_DIR}/ExtremeCUnit.pc"
+    "${PROJECT_BINARY_DIR}/ExtremeCUnit.pc"
 )
 
 set(CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_C_COMPILER>  <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>  -o <TARGET> <LINK_LIBRARIES>")
@@ -48,5 +50,7 @@ ADD_DEPENDENCIES(runv test)
 
 install(TARGETS ExtremeCUnit DESTINATION "lib")
 install(FILES ExtremeCUnit.h DESTINATION "include")
-install(FILES ExtremeCUnit.pc DESTINATION "lib/pkgconfig")
+install(FILES ${PROJECT_BINARY_DIR}/ExtremeCUnit.pc DESTINATION "lib/pkgconfig")
 
+SET(CPACK_GENERATOR "DEB")
+SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "AC") #required
