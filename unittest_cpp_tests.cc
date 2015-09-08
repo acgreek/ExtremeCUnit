@@ -5,7 +5,7 @@
 
 TEST(chomp_test_remove_cpp) {
 	std::string str= "a\n";
-	Assert(0 == str.compare(str));
+	Assert(0 == str.compare("a\n"));
 	return 0;
 }
 static void foo () {

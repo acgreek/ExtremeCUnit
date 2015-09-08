@@ -2,7 +2,7 @@
 #include "util.h"
 const char * getenvd(const char *name, const char *default_str) {
 		char * result = getenv(name);
-		if (NULL == result || '\0'== result)
+		if (NULL == result)
 				return default_str;
 		return result;
 }
