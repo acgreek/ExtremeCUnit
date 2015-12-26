@@ -37,16 +37,16 @@ configure_file (
 
 set(CMAKE_CXX_LINK_EXECUTABLE "<CMAKE_C_COMPILER>  <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>  -o <TARGET> <LINK_LIBRARIES>")
 
-add_executable(test unittest_tests.c unittest_cpp_tests.cc ) 
+add_executable(extremecunit_test unittest_tests.c unittest_cpp_tests.cc ) 
 
-target_link_libraries(test ExtremeCUnit dl stdc++)
-set_target_properties(test PROPERTIES CMAKE_C_LINK_FLAGS "${CMAKE_C_FLAGS} -DUNIT_TEST")
-set_target_properties(test PROPERTIES CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_FLAGS}  -DUNIT_TEST")
+target_link_libraries(extremecunit_test ExtremeCUnit dl stdc++)
+set_target_properties(extremecunit_test PROPERTIES CMAKE_C_LINK_FLAGS "${CMAKE_C_FLAGS} -DUNIT_TEST")
+set_target_properties(extremecunit_test PROPERTIES CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_FLAGS}  -DUNIT_TEST")
 
-add_custom_target(run ./test)
-add_custom_target(runv ./test -v)
-ADD_DEPENDENCIES(run test)
-ADD_DEPENDENCIES(runv test)
+add_custom_target(run ./extremecunit_test)
+add_custom_target(runv ./extremecunit_test -v)
+ADD_DEPENDENCIES(run extremecunit_test)
+ADD_DEPENDENCIES(runv extremecunit_test)
 
 install(TARGETS ExtremeCUnit DESTINATION "lib")
 install(FILES ExtremeCUnit.h DESTINATION "include")
